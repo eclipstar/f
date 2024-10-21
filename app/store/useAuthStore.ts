@@ -1,16 +1,18 @@
-import { User } from 'interfaces/Auth.inteface';
-import {create} from 'zustand';
+import { User } from 'interfaces/Auth.inteface'
+import { create } from 'zustand'
 
 interface AuthState {
-    User: User | null;  
-    isLoggedIn: boolean;
-    setUser: (data: User) => void;  
+  User: User | null
+  isLoggedIn: boolean
+  setUser: (data: User) => void
+  setIsLoggedIn: (data: boolean) => void
 }
 
-const useAuthStore = create<AuthState>((set) => ({
-  User: null,  
+const useAuthStore = create<AuthState>(set => ({
+  User: null,
   isLoggedIn: false,
-  setUser: (data: User) => set((state) => ({ User: {...state.User, ...data } })),
-}));
+  setUser: (data: User) => set(state => ({ User: { ...state.User, ...data } })),
+  setIsLoggedIn: (loggedIn: boolean) => set(() => ({ isLoggedIn: loggedIn }))
+}))
 
-export default useAuthStore;
+export default useAuthStore

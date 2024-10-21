@@ -1,4 +1,5 @@
 import colors from '@config/theme/colors';
+import { LayoutUtils } from '@utils/layout';
 import React from 'react';
 import { View, TextInput, StyleSheet, Text, KeyboardTypeOptions } from 'react-native';
 
@@ -35,18 +36,18 @@ function TextField ({placeholder,onChangeText,onBlur,secureTextEntry,value, labe
 const styles = StyleSheet.create({
   label: {
     color:colors.primaryTextColor,
-    fontSize:14,
+    fontSize:LayoutUtils.scaleFontSize(14),
     fontWeight:'700',
-    marginBottom:10
+    marginBottom:LayoutUtils.moderateScale(10)
   },
   container: {
     backgroundColor: '#E0E0E0', // Color de fondo del contenedor
     borderRadius: 10, // Bordes redondeados
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingHorizontal: LayoutUtils.moderateScale(10),
+    paddingVertical: LayoutUtils.moderateScale(5),
   },
   input: {
-    fontSize: 14,
+    fontSize: LayoutUtils.scaleFontSize(14),
     fontWeight: '300',
     letterSpacing: 1,
     color: colors.placeHolderColor, // Color del texto del input

@@ -6,6 +6,7 @@ import LoginForm from '@ui/Forms/LoginForm';
 import Title from '@ui/tipografy/Title';
 import colors from '@config/theme/colors';
 import Logo from '../../logo.svg';
+import { LayoutUtils } from '@utils/layout';
 
 function LoginScreen () {
 
@@ -52,25 +53,25 @@ const styles = StyleSheet.create({
     },
     forgotPasswordText: {
         color:colors.primaryTextColor,
-        fontSize: 18,
+        fontSize: LayoutUtils.scaleFontSize(18),
         textAlign:'center',
     },
     forgotPasswordBox: {
         flex:1,
-        paddingBottom:30,
+        paddingBottom:LayoutUtils.moderateScale(30),
         flexDirection:'column',
         justifyContent:'flex-end',
     },
     enterPersonalInfoText: {
-        marginTop: 20,
-        marginBottom: 40,
+        marginTop: LayoutUtils.moderateScale(20),
+        marginBottom: LayoutUtils.moderateScale(40),
         color:colors.primaryTextColor,
         fontWeight:'600'
     },
     logoContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 30,
+        marginBottom: LayoutUtils.moderateScale(30),
       },
     welcomeLabelContainer: {
         flex:2,

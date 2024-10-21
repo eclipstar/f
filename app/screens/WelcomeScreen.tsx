@@ -3,22 +3,30 @@ import { View, Text, StyleSheet } from 'react-native';
 import Logo from '../../logo.svg';
 import useAuthStore from '../store/useAuthStore';
 import colors from '@config/theme/colors';
+import { LayoutUtils } from '@utils/layout';
+import { RootStackParamList } from './SignUpOptsScreen';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-const WelcomeScreen = () => {
+type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Welcome'>;
+  interface Props {
+    navigation: RegisterScreenNavigationProp;
+  }
+const WelcomeScreen = ({navigation}: Props) => {
     
   const {User} = useAuthStore()
+  
+    setTimeout(() => {
+        navigation.navigate('Main')
+    }, 5000);
 
 
   return (
     <View style={styles.container}>
-      {/* Logo de la app */}
       <View style={styles.logoContainer}>
         <Logo width={200} height={200}/>
       </View>
-      {/* Texto de bienvenida */}
       <Text style={styles.welcomeText}>¡Bienvenido a .... {User?.name}!</Text>
 
-      {/* Texto de carga */}
       <Text style={styles.loadingText}>
         Estamos cargando tu información para encontrar el lugar ideal para ti...
       </Text>
@@ -32,7 +40,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Centra verticalmente
     alignItems: 'center', // Centra horizontalmente
     backgroundColor: '#fff',
-    padding: 20,
+    padding: LayoutUtils.moderateScale(20),
   },
   logoContainer: {
     justifyContent: 'center', 
@@ -41,7 +49,7 @@ const styles = StyleSheet.create({
   },
   logoPlaceholder: {
     width: 200,  // Ancho del logo
-    height: 200, // Alto del logo
+    height: LayoutUtils.moderateVerticalScale(200), // Alto del logo
     backgroundColor: '#e0e0e0',  // Color gris para simular el logo
     justifyContent: 'center',
     alignItems: 'center',
@@ -52,14 +60,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   welcomeText: {
-    fontSize: 24,
+    fontSize: LayoutUtils.moderateScale(24),
     fontWeight: 'bold',
     textAlign: 'center',
     color: colors.secondaryTextColor,
-    marginBottom: 10,
+    marginBottom: LayoutUtils.moderateScale(10),
   },
   loadingText: {
-    fontSize: 16,
+    fontSize: LayoutUtils.scaleFontSize(16),
     color: colors.primaryTextColor,
     textAlign: 'center',
   },

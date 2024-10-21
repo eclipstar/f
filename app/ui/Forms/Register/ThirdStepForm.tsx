@@ -3,7 +3,6 @@ import Button from '@ui/components/Button';
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 const { height: screenHeight } = Dimensions.get('window');
-
 // Lista de opciones (similar a la de tu imagen)
 const items = [
   'Mi sexualidad',

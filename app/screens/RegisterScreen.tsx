@@ -12,6 +12,7 @@ export type RootStackParamList = {
     Login: undefined;
     SignUpOpts: undefined;
     Welcome: undefined;
+    Main:undefined
   };
 
   type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
@@ -21,14 +22,13 @@ export type RootStackParamList = {
 
 function RegisterScreen({navigation} : Props) {
 
-    const { setUser } = useAuthStore()
+    const { setUser, setIsLoggedIn } = useAuthStore()
     const [step, setstep] = useState<number>(1)
 
 
     const handleFirstStep = (data: User) => {
         setUser(data)
         setstep(2);
-        
     }
     
     const handleSecondStep = (data: User) => {
@@ -39,6 +39,7 @@ function RegisterScreen({navigation} : Props) {
     
     const handleThirdStep = (data: User) => {
         setUser(data)
+        setIsLoggedIn(true)
         navigation.navigate('Welcome')
 
     }

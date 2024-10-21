@@ -5,11 +5,14 @@ import Google from '../assets/icons/google.svg'
 import { StackNavigationProp } from '@react-navigation/stack';
 import Button from '@ui/components/Button';
 import colors from '@config/theme/colors';
+import { LayoutUtils } from '@utils/layout';
 
 // types.ts
 export type RootStackParamList = {
     Register: undefined;
     Login: undefined;
+    Welcome: undefined
+    Main: undefined
   };
 
   type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
@@ -66,7 +69,7 @@ function SignUpOptsScreen ({navigation}: Props)  {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: LayoutUtils.moderateScale(20),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
@@ -75,9 +78,9 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection:"column",
     alignItems:"center",
-    paddingTop: 30,
-    paddingBottom:30,
-    height:250,
+    paddingTop: LayoutUtils.moderateScale(30),
+    paddingBottom:LayoutUtils.moderateScale(30),
+    height:LayoutUtils.moderateVerticalScale(250),
     justifyContent:"space-between"
   },
   button: {
