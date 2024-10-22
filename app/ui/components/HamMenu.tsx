@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 import colors from '@config/theme/colors';
 import { LayoutUtils } from '@utils/layout';
 import React from 'react';

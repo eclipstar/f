@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 
-const DropdownMenu = () => {
+const DropdownMenu = ({handleChange}: {handleChange: Function}) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
@@ -14,6 +15,7 @@ const DropdownMenu = () => {
   const handleItemPress = (item: any) => {
     setSelectedItem(item);
     setIsMenuVisible(false);
+    handleChange(item)
   };
 
   return (

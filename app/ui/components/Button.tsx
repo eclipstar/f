@@ -11,7 +11,7 @@ interface Props {
     handleClick?: any,
     appearance: 'filled' | 'outlined'
     icon?: React.ReactNode,
-    elevated: boolean,
+    elevated?: boolean,
     customRadius?: number
 }
 
@@ -51,7 +51,7 @@ function Button ({children,color,rounded, customRadius, elevated, handleClick,ap
     });
 
     return (
-    <TouchableOpacity role='button' onPress={handleClick} style={{...appearance === 'filled' ? styles.registerButton : styles.googleButton, ...(elevated ? {elevation:8} : {}) }}>
+    <TouchableOpacity role='button' onPress={handleClick} style={{...appearance === 'filled' ? styles.registerButton : styles.googleButton, ...(elevated ? {elevation:10} : {}) }}>
         {icon ?? null}
         <Text style={ appearance === 'filled' ? styles.buttonText : styles.googleButtonText}>
             {children}

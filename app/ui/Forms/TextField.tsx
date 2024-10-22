@@ -3,7 +3,7 @@ import { LayoutUtils } from '@utils/layout';
 import React from 'react';
 import { View, TextInput, StyleSheet, Text, KeyboardTypeOptions } from 'react-native';
 
-interface Props {
+export interface TextInputProps {
     onChangeText: any;
     onBlur?: any;
     value: string;
@@ -13,7 +13,7 @@ interface Props {
     keyBoardType?: KeyboardTypeOptions
 }
 
-function TextField ({placeholder,onChangeText,onBlur,secureTextEntry,value, label, keyBoardType = 'default'}: Props ) {
+function TextField ({placeholder,onChangeText,onBlur,secureTextEntry,value, label, keyBoardType = 'default'}: TextInputProps ) {
   return (
     <View>
       {label && <Text style={styles.label}>{label}</Text>}
