@@ -1,15 +1,15 @@
 /* eslint-disable arrow-body-style */
-import colors from '@config/theme/colors';
-import { LayoutUtils } from '@utils/layout';
-import React from 'react';
-import { View, TouchableOpacity, GestureResponderEvent, StyleSheet } from 'react-native';
+import React from 'react'
+import { GestureResponderEvent, StyleSheet, TouchableOpacity, View } from 'react-native'
 
-// Definimos los tipos de las props para TypeScript
+import colors from '@config/theme/colors'
+
+import { LayoutUtils } from '@utils/layout'
+
 interface HamburgerMenuProps {
-  onPress: (event: GestureResponderEvent) => void;
+  onPress: (event: GestureResponderEvent) => void
 }
 
-// Componente HamburgerMenu en TypeScript con props
 const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ onPress }) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
@@ -17,13 +17,12 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ onPress }) => {
       <View style={styles.line} />
       <View style={styles.line} />
     </TouchableOpacity>
-  );
-};
+  )
+}
 
-// Estilos para el menú hamburguesa
 const styles = StyleSheet.create({
   container: {
-    padding: LayoutUtils.moderateScale(10),
+    padding: LayoutUtils.moderateScale(10)
   },
   line: {
     width: 30,
@@ -31,7 +30,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondaryTextColor,
     marginVertical: 2,
     borderRadius: 25
-  },
-});
+  }
+})
 
-export default HamburgerMenu;
+export default HamburgerMenu

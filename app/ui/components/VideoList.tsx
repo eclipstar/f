@@ -1,32 +1,71 @@
-import React from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+/* eslint-disable react-native/no-inline-styles */
+import React, { useState } from 'react'
+import { Alert, ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native'
+
+import PlayImg from '../../assets/icons/play.svg'
+
+import CustomModal from './CustomModal'
+import VideoPlayer from './VideoPlayer'
 
 const data = [
-  { id: '1', text: 'Item 1' },
-  { id: '2', text: 'Item 2' },
-  { id: '3', text: 'Item 3' },
-  { id: '4', text: 'Item 4' },
-  { id: '5', text: 'Item 5' }
+  {
+    id: '1',
+    text: 'Item 1',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5G0GEO6mDxg8Vk3Eg-izH67_GVj1oFMKjtA&s'
+  },
+  {
+    id: '2',
+    text: 'Item 2',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9Sa5vv2gPzCTTIfF_m6ULKdFWdwuGsLhDlw&s'
+  },
+  {
+    id: '3',
+    text: 'Item 3',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2wSPENyKXkmZEMk7adZIyOLbyh2zoRPBi1g&s'
+  },
+  {
+    id: '4',
+    text: 'Item 4',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMYU7cEPQfWMyOJUQWNS1cS6gFau0IaaX6Mw&s'
+  },
+  {
+    id: '5',
+    text: 'Item 5',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuq40Q5w3ESpKT_26FJ-8VQSSjJEELyzMGrg&s'
+  }
 ]
 
 function ListItem({ item, index }: { item: any; index: number }) {
+  const [showVideo, setshowVideo] = useState(false)
+
   return (
-    <View style={styles.listItem}>
-      <View style={styles.videoContainer}>
-        <View style={index % 2 === 0 ? styles.imageContainer : styles.imageContainerEven}>
-          <Image
-            source={{
-              uri: 'https://png.pngtree.com/png-vector/20190419/ourmid/pngtree-vector-play-icon-png-image_956416.jpg'
-            }} // Placeholder image
-            style={styles.image}
-          />
+    <>
+      <View style={styles.listItem}>
+        <View style={styles.videoContainer}>
+          <Pressable
+            onPress={() => {
+              setshowVideo(true)
+            }}
+          >
+            <View style={{ position: 'relative' }}>
+              <ImageBackground
+                style={index % 2 === 0 ? styles.imageContainer : styles.imageContainerEven}
+                source={{ uri: item.image }}
+                resizeMode='cover'
+              />
+              <PlayImg style={index % 2 === 0 ? styles.imagePlay : styles.imagePlayEven} />
+            </View>
+          </Pressable>
         </View>
+        <Text style={styles.videoDescription}>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate magnam quia, corrupti incidunt molestias
+          et amet eveniet nisi quam maiores quidem blanditiis facere harum hnem .
+        </Text>
       </View>
-      <Text style={styles.videoDescription}>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate magnam quia, corrupti incidunt molestias et
-        amet eveniet nisi quam maiores quidem blanditiis facere harum hnem .
-      </Text>
-    </View>
+      <CustomModal onClose={() => setshowVideo(false)} visible={showVideo}>
+        <VideoPlayer />
+      </CustomModal>
+    </>
   )
 }
 
@@ -58,28 +97,44 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: 140,
     height: 140,
-    backgroundColor: '#f0f0f0',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 20
+    overflow: 'hidden',
+    marginRight: 20,
+    opacity: 0.8,
+    objectFit: 'cover'
   },
   videoContainer: {
     flex: 1,
     alignItems: 'center'
   },
   imageContainerEven: {
+    overflow: 'hidden',
     width: 100,
+    opacity: 0.8,
     height: 100,
-    backgroundColor: '#f0f0f0',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 20
+    marginRight: 20,
+    objectFit: 'cover'
   },
-  image: {
+  imagePlay: {
     width: 60,
-    height: 60
+    height: 60,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -40 }, { translateY: -30 }]
+  },
+  imagePlayEven: {
+    width: 30,
+    height: 30,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -25 }, { translateY: -15 }]
   },
   videoDescription: {
     color: 'black',

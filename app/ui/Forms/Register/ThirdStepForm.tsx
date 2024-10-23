@@ -1,9 +1,11 @@
-import colors from '@config/theme/colors';
-import Button from '@ui/components/Button';
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
-const { height: screenHeight } = Dimensions.get('window');
-// Lista de opciones (similar a la de tu imagen)
+import React from 'react'
+import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+
+import Button from '@ui/components/Button'
+
+import colors from '@config/theme/colors'
+
+const { height: screenHeight } = Dimensions.get('window')
 const items = [
   'Mi sexualidad',
   'Salud Integral',
@@ -11,14 +13,13 @@ const items = [
   'Jóvenes',
   'Embarazo',
   'Anticonceptivos',
-  'Prevención de Violencia',
-];
+  'Prevención de Violencia'
+]
 interface Props {
-  onSubmit: Function,
+  onSubmit: Function
 }
 
-export function ThirdStepForm ({onSubmit}: Props) {
-
+export function ThirdStepForm({ onSubmit }: Props) {
   const handleConfirm = () => {
     onSubmit()
   }
@@ -26,11 +27,11 @@ export function ThirdStepForm ({onSubmit}: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.stepProgressContainer}>
-          <View style={styles.step} />
-          <View style={styles.activeStep} />
+        <View style={styles.step} />
+        <View style={styles.activeStep} />
       </View>
       {/* Header Fijo */}
-      <View style={styles.header}>  
+      <View style={styles.header}>
         <Text style={styles.title}>¿Qué te interesa?</Text>
         <Text style={styles.subtitle}>Puedes elegir más de 1</Text>
       </View>
@@ -50,14 +51,16 @@ export function ThirdStepForm ({onSubmit}: Props) {
         />
       </View>
       <View style={styles.buttonBox}>
-        <Button handleClick={handleConfirm} appearance='filled' color={colors.primary} rounded >CONFIRMAR</Button>
+        <Button handleClick={handleConfirm} appearance='filled' color={colors.primary} rounded>
+          CONFIRMAR
+        </Button>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
-  preferencesContainer:{
+  preferencesContainer: {
     height: screenHeight * 0.55
   },
   container: {
@@ -69,57 +72,56 @@ const styles = StyleSheet.create({
   header: {
     marginTop: 50,
     marginBottom: 20,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: colors.secondary,
+    color: colors.secondary
   },
   buttonBox: {
-    flexDirection:'column', 
-    justifyContent:'flex-end', 
-    flex:1, 
-    paddingBottom:30
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    flex: 1,
+    paddingBottom: 30
   },
   subtitle: {
     fontSize: 16,
     color: colors.primaryTextColor,
-    marginTop: 5,
+    marginTop: 5
   },
   listContainer: {
-    paddingBottom: 20, // Espacio para la última opción
+    paddingBottom: 20
   },
   item: {
     backgroundColor: '#FF6F151F',
     paddingVertical: 20,
     borderRadius: 10,
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 15
   },
   itemText: {
     fontSize: 18,
     color: colors.primaryTextColor,
-    fontWeight: '500',
+    fontWeight: '500'
   },
   stepProgressContainer: {
-    flexDirection:'row',
-    gap:29,
-    alignItems:'center',
-    justifyContent:'center',
+    flexDirection: 'row',
+    gap: 29,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 25
   },
   activeStep: {
-    width:33,
-    height:33,
+    width: 33,
+    height: 33,
     borderRadius: 50,
-    backgroundColor:colors.stepColor
+    backgroundColor: colors.stepColor
   },
   step: {
-    width:16,
-    height:16,
+    width: 16,
+    height: 16,
     borderRadius: 50,
-    backgroundColor:colors.stepColor
-  },
-});
-
+    backgroundColor: colors.stepColor
+  }
+})

@@ -19,8 +19,8 @@ function VideosScreen() {
         </View>
         <Text style={styles.capsulasDescription}>Un espacio en el que encontrarás información importante...</Text>
       </View>
-
       {/* LISTA */}
+
       <VideoList />
     </ScrollView>
   )

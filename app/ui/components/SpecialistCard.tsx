@@ -23,7 +23,7 @@ function SpecialistCard() {
 const styles = StyleSheet.create({
   card: {
     position: 'relative',
-    backgroundColor: '#cea3d9', // Light purple background
+    backgroundColor: '#cea3d9',
     padding: 20,
     borderRadius: 20,
     alignItems: 'center',
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 100 // Adjust as needed
+    width: 100
   },
   icon: {
     width: 40,
