@@ -1,68 +1,117 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import { FirstStepForm } from '@ui/Forms/Register/FirstStepForm';
-import { SecondStepForm } from '@ui/Forms/Register/SecondStep';
-import {ThirdStepForm} from '@ui/Forms/Register/ThirdStepForm';
-import { User } from 'interfaces/Auth.inteface';
 import React, { useState } from 'react'
-import { StyleSheet, SafeAreaView } from 'react-native'
-import useAuthStore from '../store/useAuthStore';
+import { Button, SafeAreaView, StyleSheet } from 'react-native'
+
+import OKicon from '../assets/icons/ok.svg'
+import useAuthStore from '../store/useAuthStore'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { User } from 'interfaces/Auth.inteface'
+import { useToast } from 'react-native-toast-notifications'
+
+import { FirstStepForm } from '@ui/Forms/Register/FirstStepForm'
+import { SecondStepForm } from '@ui/Forms/Register/SecondStep'
+import { ThirdStepForm } from '@ui/Forms/Register/ThirdStepForm'
+
+import { createUserInfo } from '@services/auth/createUserInfo'
+import { createUserInterest } from '@services/auth/createUserInterests'
+import { createUser } from '@services/auth/registerUser'
 
 export type RootStackParamList = {
-    Register: undefined;
-    Login: undefined;
-    SignUpOpts: undefined;
-    Welcome: undefined;
-    Main:undefined
-  };
+  Register: undefined
+  Login: undefined
+  SignUpOpts: undefined
+  Welcome: undefined
+  Main: undefined
+  Description1: undefined
+  Description2: undefined
+}
 
-  type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
-  interface Props {
-    navigation: RegisterScreenNavigationProp;
+type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>
+interface Props {
+  navigation: RegisterScreenNavigationProp
+}
+
+function RegisterScreen({ navigation }: Props) {
+  const { setUser, setIsLoggedIn, User } = useAuthStore()
+  const [registerData, setregisterData] = useState<Record<string, any>>({})
+  const [step, setstep] = useState<number>(1)
+  const toast = useToast()
+
+  const registerUser = async () => {
+    try {
+      const res1 = await createUser({
+        email: registerData.email,
+        name: registerData.name,
+        password: registerData.password,
+        password_confirmation: registerData.password
+      })
+
+      const res2 = await createUserInfo({
+        alias: registerData.alias,
+        birth_date: registerData.birth_date,
+        department_id: registerData.department_id,
+        gender_id: registerData.gender_id
+      })
+
+      const res3 = await createUserInterest({
+        email: registerData.email,
+        interests: registerData.interest
+      })
+
+      console.log('RES 1 >>>>', res1)
+      console.log('RES 2 >>>>', res2)
+      console.log('RES 3 >>>>', res3)
+
+      toast.show('Usuario creado con exito.', {
+        type: 'success',
+        placement: 'top',
+        icon: <OKicon />,
+        duration: 4000,
+        animationType: 'slide-in'
+      })
+    } catch (error) {
+      console.error('Ocurrio un error al crear al usuario', error)
+    }
   }
 
-function RegisterScreen({navigation} : Props) {
+  const handleFirstStep = (data: User) => {
+    console.log(data)
+    setregisterData({ ...registerData, ...data })
+    setUser(data)
+    setstep(2)
+  }
 
-    const { setUser, setIsLoggedIn } = useAuthStore()
-    const [step, setstep] = useState<number>(1)
+  const handleSecondStep = (data: User) => {
+    console.log(data)
+    setregisterData({ ...registerData, ...data })
+    setUser(data)
+    setstep(3)
+  }
 
+  const handleThirdStep = async (data: User) => {
+    console.log(data)
+    setUser(data)
+    setregisterData({ ...registerData, ...data })
+    await registerUser()
+    // setIsLoggedIn(true)
+    navigation.navigate('Welcome')
+  }
+  return (
+    <SafeAreaView style={styles.container}>
+      {step === 1 && <FirstStepForm onSubmit={handleFirstStep} navigation={navigation} />}
+      {step === 2 && <SecondStepForm onSubmit={handleSecondStep} />}
+      {step === 3 && <ThirdStepForm onSubmit={handleThirdStep} />}
+    </SafeAreaView>
+  )
+}
 
-    const handleFirstStep = (data: User) => {
-        setUser(data)
-        setstep(2);
-    }
-    
-    const handleSecondStep = (data: User) => {
-        setUser(data)
-        setstep(3);
-        
-    }
-    
-    const handleThirdStep = (data: User) => {
-        setUser(data)
-        setIsLoggedIn(true)
-        navigation.navigate('Welcome')
-
-    }
-    return (
-        <SafeAreaView style={styles.container}>
-            {step === 1 && <FirstStepForm onSubmit={handleFirstStep} navigation={navigation} />}
-            {step === 2 && <SecondStepForm onSubmit={handleSecondStep} />}
-            {step === 3 && <ThirdStepForm  onSubmit={handleThirdStep}/>}
-             
-        </SafeAreaView>
-      );
-    };
-    
-    const styles = StyleSheet.create({
-      container: {
-        flex: 1,
-      },
-      text: {
-        fontSize: 25,
-        fontWeight: '500',
-      },
-      
-    });
-  
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  text: {
+    fontSize: 25,
+    fontWeight: '500'
+  }
+})
 
 export default RegisterScreen

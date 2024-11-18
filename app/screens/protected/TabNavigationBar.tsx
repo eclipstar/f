@@ -52,7 +52,7 @@ export function TabNavigationBar() {
       <Tab.Screen name='Juegos' component={JuegosScreen} />
       <Tab.Screen name='Inicio' component={HomeScreen} />
       <Tab.Screen name='Directorio' options={{ unmountOnBlur: true }} component={DirectoryScreen} />
-      <Tab.Screen name='Perfil' component={ProfileScreen} />
+      <Tab.Screen name='Perfil' options={{ unmountOnBlur: true }} component={ProfileScreen} />
     </Tab.Navigator>
   )
 }

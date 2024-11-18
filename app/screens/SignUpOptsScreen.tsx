@@ -16,6 +16,9 @@ export type RootStackParamList = {
   Login: undefined
   Welcome: undefined
   Main: undefined
+  Description1: undefined
+  Description2: undefined
+  Description3: undefined
 }
 
 type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>

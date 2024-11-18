@@ -1,4 +1,4 @@
 export interface User {
-    name: string;
-    pronoun: string;
+  name: string
+  alias: string
 }

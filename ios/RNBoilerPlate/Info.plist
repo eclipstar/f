@@ -31,7 +31,7 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
+	<key>NSdepartment_idWhenInUseUsageDescription</key>
 	<string></string>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash</string>

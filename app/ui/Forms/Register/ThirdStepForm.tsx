@@ -1,28 +1,41 @@
-import React from 'react'
+/* eslint-disable react-native/no-inline-styles */
+import React, { useEffect, useState } from 'react'
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
+import { Interest } from 'interfaces/GetInterests.interface'
+
 import Button from '@ui/components/Button'
+
+import { GetInterests } from '@services/GetInterests.service'
 
 import colors from '@config/theme/colors'
 
 const { height: screenHeight } = Dimensions.get('window')
-const items = [
-  'Mi sexualidad',
-  'Salud Integral',
-  'Inteligencia Emocional',
-  'Jóvenes',
-  'Embarazo',
-  'Anticonceptivos',
-  'Prevención de Violencia'
-]
+
 interface Props {
   onSubmit: Function
 }
 
 export function ThirdStepForm({ onSubmit }: Props) {
+  const [selected, setselected] = useState<string[]>([])
+  const [interests, setinterests] = useState<Interest[]>([])
   const handleConfirm = () => {
-    onSubmit()
+    onSubmit({ interest: selected })
   }
+
+  const handleOnpress = (item: string) => {
+    if (selected.includes(item)) return setselected(selected.filter(el => el !== item))
+    setselected([...selected, item])
+  }
+
+  const fetchInterests = async () => {
+    const res = await GetInterests()
+    setinterests(res.data)
+  }
+
+  useEffect(() => {
+    fetchInterests()
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -39,13 +52,16 @@ export function ThirdStepForm({ onSubmit }: Props) {
       {/* Lista Scrolleable */}
       <View style={styles.preferencesContainer}>
         <FlatList
-          data={items}
+          data={interests}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listContainer}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.item}>
-              <Text style={styles.itemText}>{item}</Text>
+            <TouchableOpacity
+              onPress={() => handleOnpress(item.interest)}
+              style={{ ...styles.item, backgroundColor: selected.includes(item.interest) ? '#ec742ed9' : '#FF6F151F' }}
+            >
+              <Text style={styles.itemText}>{item.interest}</Text>
             </TouchableOpacity>
           )}
         />

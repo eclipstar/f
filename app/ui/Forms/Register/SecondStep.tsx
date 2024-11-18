@@ -1,28 +1,34 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 import Logo from '../../../../logo.svg'
 import TextField from '../TextField'
 import { Picker } from '@react-native-picker/picker'
 import { Formik } from 'formik'
+import { IDeparment } from 'interfaces/GetDeparments.interface'
+import { IGender } from 'interfaces/GetGenders.interface'
 import { ScrollView } from 'react-native-gesture-handler'
 import * as Yup from 'yup'
 
 import Button from '@ui/components/Button'
 import Title from '@ui/tipografy/Title'
 
+import { GetDeparments } from '@services/GetDepartments.service'
+import { GetGenders } from '@services/GetGenders.service'
+
 import colors from '@config/theme/colors'
 
 const SignupSchema = Yup.object().shape({
-  pronoun: Yup.string().min(4, 'Muy corto!').required('El pronombre es requerido'),
+  alias: Yup.string().min(4, 'Muy corto!').required('El pronombre es requerido'),
   day: Yup.number().max(31, 'Solo dias calendario validos').required('El dia es requerido'),
   month: Yup.number().min(1).max(12).required('El mes es requerido'),
   year: Yup.number()
     .min(1950, 'Anio no puede ser menor 1950')
     .max(new Date().getFullYear(), `El anio no debe ser mayor a ${new Date().getFullYear()}`)
     .required('El anio es requerido'),
-  location: Yup.string().required('El departamento es requerido')
+  gender_id: Yup.string().required('Gnero es requerido'),
+  department_id: Yup.string().required('El departamento es requerido')
 })
 
 interface Props {
@@ -30,6 +36,9 @@ interface Props {
 }
 
 export function SecondStepForm({ onSubmit }: Props) {
+  const [genders, setgenders] = useState<IGender[]>([])
+  const [dptos, setDptos] = useState<IDeparment[]>([])
+
   const months = [
     { text: 'Seleccione un mes', value: null },
     { text: 'Enero', value: 1 },
@@ -46,23 +55,21 @@ export function SecondStepForm({ onSubmit }: Props) {
     { text: 'Diciembre', value: 12 }
   ]
 
-  const departments = [
-    { text: 'Seleccione un departamento', value: null },
-    { text: 'Ahuachapán', value: 'Ahuachapán' },
-    { text: 'Cabañas', value: 'Cabañas' },
-    { text: 'Chalatenango', value: 'Chalatenango' },
-    { text: 'Cuscatlán', value: 'Cuscatlán' },
-    { text: 'La Libertad', value: 'La Libertad' },
-    { text: 'La Paz', value: 'La Paz' },
-    { text: 'La Unión', value: 'La Unión' },
-    { text: 'Morazán', value: 'Morazán' },
-    { text: 'San Miguel', value: 'San Miguel' },
-    { text: 'San Salvador', value: 'San Salvador' },
-    { text: 'Santa Ana', value: 'Santa Ana' },
-    { text: 'San Vicente', value: 'San Vicente' },
-    { text: 'Sonsonate', value: 'Sonsonate' },
-    { text: 'Usulután', value: 'Usulután' }
-  ]
+  const getGenders = async () => {
+    const res = await GetGenders()
+    setgenders(res.data)
+  }
+  const getDeptos = async () => {
+    const res = await GetDeparments()
+    console.log(res)
+
+    setDptos(res.data)
+  }
+
+  useEffect(() => {
+    getGenders()
+    getDeptos()
+  }, [])
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -76,11 +83,16 @@ export function SecondStepForm({ onSubmit }: Props) {
         </View>
 
         <Formik
-          initialValues={{ day: null, month: null, year: null, location: '', pronoun: '' }}
+          initialValues={{ day: null, month: null, year: null, department_id: '', alias: '', gender_id: '' }}
           validationSchema={SignupSchema}
           onSubmit={values => {
-            console.log(values)
-            onSubmit(values)
+            const dataToSend = {
+              alias: values.alias,
+              gender_id: values.gender_id,
+              department_id: values.department_id,
+              birth_date: `${values.day}/${values.month}/${values.year}`
+            }
+            onSubmit(dataToSend)
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values, setFieldValue, errors, touched }: any) => (
@@ -93,12 +105,12 @@ export function SecondStepForm({ onSubmit }: Props) {
                 <View style={styles.spacing}>
                   <TextField
                     label='¿Cómo te gusta que te digan?'
-                    onChangeText={handleChange('pronoun')}
-                    onBlur={handleBlur('pronoun')}
-                    value={values.pronoun}
+                    onChangeText={handleChange('alias')}
+                    onBlur={handleBlur('alias')}
+                    value={values.alias}
                     placeholder='Pronombre'
                   />
-                  {errors.pronoun && touched.pronoun && <Text style={styles.errorText}>{errors.pronoun}</Text>}
+                  {errors.alias && touched.alias && <Text style={styles.errorText}>{errors.alias}</Text>}
                 </View>
 
                 <Text style={styles.label}>Fecha de nacimiento</Text>
@@ -138,20 +150,39 @@ export function SecondStepForm({ onSubmit }: Props) {
                 {errors.year && touched.year && <Text style={styles.errorText}>{errors.year}</Text>}
 
                 <View style={styles.spacing} />
+                <Text style={styles.label}>¿Genero?</Text>
+                <View style={{ ...styles.pickerWapper2 }}>
+                  <Picker
+                    selectedValue={values.gender_id}
+                    style={styles.picker}
+                    onValueChange={itemValue => setFieldValue('gender_id', itemValue)}
+                  >
+                    {genders
+                      .map(e => ({ text: e.gender, value: e.id }))
+                      .map(el => (
+                        <Picker.Item key={el.value} label={el.text} value={el.value} />
+                      ))}
+                  </Picker>
+                </View>
+                {errors.gender_id && touched.gender_id && (
+                  <Text style={{ ...styles.errorText, ...styles.spacing }}>{errors.gender_id}</Text>
+                )}
+
+                <View style={styles.spacing} />
                 <Text style={styles.label}>¿De dónde eres?</Text>
                 <View style={{ ...styles.pickerWapper2 }}>
                   <Picker
-                    selectedValue={values.location}
+                    selectedValue={values.department_id}
                     style={styles.picker}
-                    onValueChange={itemValue => setFieldValue('location', itemValue)}
+                    onValueChange={itemValue => setFieldValue('department_id', itemValue)}
                   >
-                    {departments.map(el => (
-                      <Picker.Item key={el.value} label={el.text} value={el.value} />
+                    {dptos.map(el => (
+                      <Picker.Item key={el.id} label={el.department_name} value={el.id} />
                     ))}
                   </Picker>
                 </View>
-                {errors.location && touched.location && (
-                  <Text style={{ ...styles.errorText, ...styles.spacing }}>{errors.location}</Text>
+                {errors.department_id && touched.department_id && (
+                  <Text style={{ ...styles.errorText, ...styles.spacing }}>{errors.department_id}</Text>
                 )}
                 <View style={styles.buttonBox}>
                   <Button appearance='filled' color={colors.primary} handleClick={handleSubmit} rounded>
@@ -254,7 +285,8 @@ const styles = StyleSheet.create({
   },
   buttonBox: {
     width: '100%',
-    marginTop: 50
+    marginTop: 50,
+    marginBottom: 30
   },
   appLogoContainer: {
     flex: 1,

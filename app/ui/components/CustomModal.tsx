@@ -2,6 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Dimensions, Modal, Pressable, StyleSheet, View } from 'react-native'
 
 import CloseIcon from '../../assets/icons/close.svg'
+import DislikeOutlined from '../../assets/icons/dislikeOutlined.svg'
+import FillHeart from '../../assets/icons/fillHeart.svg'
+import FilledDislike from '../../assets/icons/filledDislike.svg'
+import LikeFilled from '../../assets/icons/likeFilled.svg'
+import LikeOutlined from '../../assets/icons/likeOutlined.svg'
+import OutlineHeart from '../../assets/icons/outlineHeart.svg'
 
 interface Props {
   visible: boolean
@@ -24,6 +30,11 @@ function CustomModal({ visible, children, onClose }: Props) {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             {children}
+            <View style={styles.container}>
+              <LikeOutlined width={40} height={40} />
+              <DislikeOutlined width={40} height={40} />
+              <FillHeart width={40} height={40} />
+            </View>
             <Pressable style={[styles.button, styles.buttonClose]} onPress={() => onClose()}>
               <CloseIcon width={20} height={20} />
             </Pressable>
@@ -40,9 +51,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 20,
+    paddingBottom: 70
+  },
   modalView: {
     position: 'relative',
-    height: dimensions.height * 0.33,
+    height: dimensions.height * 0.39,
     width: dimensions.width * 0.95,
     margin: 20,
     backgroundColor: '#dcd8eb',
