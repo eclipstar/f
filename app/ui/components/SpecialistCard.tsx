@@ -4,13 +4,15 @@ import { StyleSheet, Text, View } from 'react-native'
 import MapsIcon from '../../assets/icons/maps.svg'
 import WazeIcon from '../../assets/icons/waze.svg'
 
-function SpecialistCard() {
+import { Directory } from '@services/directories/GetDirectoriesByZone.service'
+
+function SpecialistCard({ item }: { item: Directory }) {
   return (
     <View style={styles.card}>
       <View style={styles.textContainer}>
-        <Text style={styles.title}>DR. CARRANZA</Text>
-        <Text style={styles.phone}>6677-8899</Text>
-        <Text style={styles.address}>Bo. La Merced, san miguel</Text>
+        <Text style={styles.title}>{item.name}</Text>
+        <Text style={styles.phone}>{item.phone}</Text>
+        <Text style={styles.address}>{item.address}</Text>
       </View>
       <View style={styles.contactInformation}>
         <WazeIcon />

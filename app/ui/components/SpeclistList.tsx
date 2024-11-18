@@ -1,15 +1,17 @@
 /* eslint-disable react-native/no-inline-styles */
-import { ScrollView, StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
+
+import { Directory } from '@services/directories/GetDirectoriesByZone.service'
 
 import SpecialistCard from './SpecialistCard'
 
-function SpecialistList() {
+function SpecialistList({ data }: { data: Directory[] }) {
   return (
-    <ScrollView style={{ width: '100%', marginTop: 40 }} contentContainerStyle={styles.container}>
-      {[1, 2, 3, 4, 5].map(card => (
-        <SpecialistCard key={card} />
+    <View style={{ ...styles.container }}>
+      {data.map(card => (
+        <SpecialistCard item={card} key={card.id} />
       ))}
-    </ScrollView>
+    </View>
   )
 }
 
@@ -18,7 +20,9 @@ const styles = StyleSheet.create({
     width: '90%',
     marginVertical: 0,
     marginHorizontal: 'auto',
-    gap: 20
+    gap: 20,
+    marginTop: 40,
+    paddingBottom: 200
   }
 })
 

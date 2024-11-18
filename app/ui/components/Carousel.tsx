@@ -1,20 +1,16 @@
 import React, { useRef, useState } from 'react'
-import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import Arrow from '../../assets/icons/arrow.svg'
 import { ScrollView } from 'react-native-gesture-handler'
 
+import { CarrouselImg } from '@services/home/GetCrrouselmages.service'
+
 const { width } = Dimensions.get('window')
 
-const Carousel = () => {
+const Carousel = ({ data }: { data: CarrouselImg[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const flatListRef: any = useRef(null)
-
-  const data = [
-    { id: '1', color: '#FFC1E3' },
-    { id: '2', color: '#FFDEE9' },
-    { id: '3', color: '#FF99CC' }
-  ]
 
   // Función para avanzar al siguiente elemento.
   const handleNext = () => {
@@ -35,7 +31,13 @@ const Carousel = () => {
   // Renderiza cada ítem del carrusel.
   const renderItem = ({ item }: any) => (
     <View style={[styles.item, { backgroundColor: item.color }]}>
-      <Text style={styles.itemText}>Item {item.id}</Text>
+      <Image
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={{ width: '100%', height: '100%' }}
+        source={{
+          uri: item.image_file_content
+        }}
+      />
     </View>
   )
 
@@ -55,7 +57,7 @@ const Carousel = () => {
         horizontal
         showsHorizontalScrollIndicator={false}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()}
         scrollEnabled={false} // Desactiva el scroll manual para que solo funcione con las flechas.
         style={styles.carousel}
         pagingEnabled

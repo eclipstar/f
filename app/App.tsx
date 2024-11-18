@@ -39,7 +39,7 @@ const App: React.FC = () => {
     <ToastProvider>
       <PaperProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName='SignUpOpts'>
+          <Stack.Navigator initialRouteName='Main'>
             <Stack.Screen name='SignUpOpts' options={{ headerShown: false }} component={SignUpOptsScreen} />
             <Stack.Screen name='Register' options={{ headerShown: false }} component={RegisterScreen} />
             <Stack.Screen name='Login' options={{ headerShown: false }} component={LoginScreen} />

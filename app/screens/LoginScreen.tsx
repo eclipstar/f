@@ -13,6 +13,7 @@ import Button from '@ui/components/Button'
 import Title from '@ui/tipografy/Title'
 
 import { storeData } from '@services/AsyncStorage.service'
+import { ForgotPassword } from '@services/auth/ForgotPassowrd.service'
 import { Login } from '@services/auth/loginService'
 
 import colors from '@config/theme/colors'
@@ -58,7 +59,7 @@ function LoginScreen({ navigation }: Props) {
     }
   }
 
-  const handleResetPassword = () => {
+  const handleResetPassword = async () => {
     if (!email) {
       return toast.show('Escriba un correo electronico', {
         type: 'info',
@@ -67,12 +68,25 @@ function LoginScreen({ navigation }: Props) {
         animationType: 'slide-in'
       })
     }
-    toast.show('envio de correo exitoso', {
-      type: 'success',
-      placement: 'top',
-      duration: 4000,
-      animationType: 'slide-in'
-    })
+
+    try {
+      const res = await ForgotPassword(email)
+      console.log(res)
+
+      toast.show('envio de correo exitoso', {
+        type: 'success',
+        placement: 'top',
+        duration: 4000,
+        animationType: 'slide-in'
+      })
+    } catch (error) {
+      toast.show('No se pudo enviar el correo', {
+        type: 'error',
+        placement: 'top',
+        duration: 4000,
+        animationType: 'slide-in'
+      })
+    }
   }
 
   const getEmailForResetPass = (val: string) => {

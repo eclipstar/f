@@ -15,6 +15,7 @@ api.interceptors.request.use(
     if (token) {
       // Si el token está disponible, agrégalo al encabezado de la solicitud
       config.headers.Authorization = `Bearer ${token}`
+      config.headers['Content-Type'] = `application/json`
     }
     // Retornar la configuración, sin lanzar errores si el token no está
     return config

@@ -1,36 +1,53 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 /* eslint-disable react-native/no-inline-styles */
-import { StyleSheet, View } from 'react-native';
+import { useEffect, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+
 import Logo from '../../../../logo.svg'
-import Button from '@ui/components/Button';
-import colors from '@config/theme/colors';
-import DataFilterActions from '@ui/components/DataFilterActions';
-import SpecialistList from '@ui/components/SpeclistList';
+import { ScrollView } from 'react-native-gesture-handler'
 
- function DirectorySpecialists({zone}: {zone: string}) {
-    return (
+import Button from '@ui/components/Button'
+import DataFilterActions from '@ui/components/DataFilterActions'
+import SpecialistList from '@ui/components/SpeclistList'
 
-      <View style={styles.container}>
-        <Logo  width={125} height={125} />
-          <View style={{width:'50%',marginTop:45}}>
-            <Button elevated appearance='filled' customRadius={22} color={colors.primary}>
-                {zone}
-            </Button>
-          </View>
-          <DataFilterActions />
-          <SpecialistList />
+import { Directory, GetDirectoriesByZone } from '@services/directories/GetDirectoriesByZone.service'
+import { Zone } from '@services/directories/GetZones.service'
+
+import colors from '@config/theme/colors'
+
+function DirectorySpecialists({ zone }: { zone: Zone }) {
+  const [directories, setdirectories] = useState<Directory[]>([])
+
+  const getDirectories = async () => {
+    const res = await GetDirectoriesByZone(zone)
+    setdirectories(res.data)
+  }
+
+  useEffect(() => {
+    getDirectories()
+  }, [])
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Logo width={125} height={125} />
+      <View style={{ width: '50%', marginTop: 45 }}>
+        <Button elevated appearance='filled' customRadius={22} color={colors.primary}>
+          {zone.zone_name}
+        </Button>
       </View>
-    )
+      <DataFilterActions />
+      <SpecialistList data={directories} />
+    </ScrollView>
+  )
 }
 
 const styles = StyleSheet.create({
-    container: {
-      alignItems:'center',
-      backgroundColor: '#fff',
-      paddingTop:0
-    },
-    filterContainer: {
-    }
+  container: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingTop: 0
+  },
+  filterContainer: {}
+})
 
-  })
-
-  export default DirectorySpecialists
+export default DirectorySpecialists
