@@ -3,27 +3,32 @@ import { useEffect, useState } from 'react'
 import { FlatList, ScrollView, StyleSheet, View } from 'react-native'
 
 import Logo from '../../../logo.svg'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Emotion } from 'interfaces/Emotion.interface'
 import { HomeImage } from 'interfaces/GetHomeImgs.interface'
 
 import Carousel from '@ui/components/Carousel'
 import { SliderCard } from '@ui/components/SliderCard'
 
+import { storeData } from '@services/AsyncStorage.service'
+import { GetEmotions } from '@services/GetEmotions.service'
 import { CarrouselImg, GetCarrouselImages } from '@services/home/GetCrrouselmages.service'
 import { GetImagesHome } from '@services/home/GetHomeImages.service'
-import ModalComponent from './Modal'
-import { GetEmotions } from '@services/GetEmotions.service'
-import { Emotion } from 'interfaces/Emotion.interface'
 import { createDailyEmotion } from '@services/setDailyEmotion'
-import { storeData } from '@services/AsyncStorage.service'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+
+import img1 from '@assets/images/1.png'
+import img2 from '@assets/images/2.png'
+
+import ModalComponent from './Modal'
 
 export function HomeScreen() {
   const renderItem = (item: HomeImage) => <SliderCard item={item} />
+  const [firtSlider, setFirstSlider] = useState<HomeImage[]>([])
   const [imgsHome, setimgsHome] = useState<HomeImage[]>([])
   const [emotions, setEmotions] = useState<Emotion[]>([])
   const [carrouselImgs, setCarrouselImgs] = useState<CarrouselImg[]>([])
-  const [isModalVisible, setIsModalVisible] = useState(false) 
-  
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
   const handleEmotionSelect = async (emotion: string) => {
     try {
       const response = await createDailyEmotion({ emotion })
@@ -40,21 +45,50 @@ export function HomeScreen() {
   const checkModalVisibility = async () => {
     try {
       const lastShownDate = await AsyncStorage.getItem('lastModalDate')
-      const today = new Date().toISOString().split('T')[0] 
+      const today = new Date().toISOString().split('T')[0]
       if (lastShownDate !== today) {
-        setIsModalVisible(true) 
+        setIsModalVisible(true)
         await storeData('lastModalDate', today)
       }
     } catch (error) {
       console.error('Error checking modal visibility:', error)
     }
   }
-  
+
   const getHomeImage = async () => {
     const imgs = await GetImagesHome()
     const carrousel = await GetCarrouselImages()
     setimgsHome(imgs.data)
     setCarrouselImgs(carrousel.data)
+  }
+
+  const buildFirst = async () => {
+    setFirstSlider([
+      {
+        id: 1,
+        image_file_title: 'Imagen 1',
+        image_file_content: img1,
+        image_file_description: 'Imagen 1',
+        image_file_status: 1,
+        image_file_shows_in: 0
+      },
+      {
+        id: 2,
+        image_file_title: 'Imagen 2',
+        image_file_content: img2,
+        image_file_description: 'Imagen 2',
+        image_file_status: 1,
+        image_file_shows_in: 0
+      },
+      {
+        id: 3,
+        image_file_title: 'Imagen 3',
+        image_file_content: img1,
+        image_file_description: 'Imagen 3',
+        image_file_status: 1,
+        image_file_shows_in: 0
+      }
+    ])
   }
 
   const fetchEmotions = async () => {
@@ -66,24 +100,25 @@ export function HomeScreen() {
     getHomeImage()
     fetchEmotions()
     checkModalVisibility()
+    buildFirst()
   }, [])
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Modal */}
       {isModalVisible && (
-      <ModalComponent
-        emotions={emotions}
-        isVisible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
-        onEmotionSelect={handleEmotionSelect} 
-      />
+        <ModalComponent
+          emotions={emotions}
+          isVisible={isModalVisible}
+          onClose={() => setIsModalVisible(false)}
+          onEmotionSelect={handleEmotionSelect}
+        />
       )}
       <View style={styles.item}>
-        <Logo  width={125} height={125} />
+        <Logo width={125} height={125} />
         <FlatList
           style={{ marginBottom: 30 }}
-          data={imgsHome}
+          data={firtSlider}
           renderItem={({ item }) => renderItem(item)}
           keyExtractor={item => item.id.toString()}
           horizontal
@@ -113,10 +148,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: '#fff'
   },
-  item:{
-    justifyContent:'center',
-    alignItems:'center',
-    marginTop:20
+  item: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20
   },
   logo: {
     resizeMode: 'contain',
