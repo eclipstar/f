@@ -11,10 +11,10 @@ import { FirstStepForm } from '@ui/Forms/Register/FirstStepForm'
 import { SecondStepForm } from '@ui/Forms/Register/SecondStep'
 import { ThirdStepForm } from '@ui/Forms/Register/ThirdStepForm'
 
+import { storeData } from '@services/AsyncStorage.service'
 import { createUserInfo } from '@services/auth/createUserInfo'
 import { createUserInterest } from '@services/auth/createUserInterests'
 import { createUser } from '@services/auth/registerUser'
-import { storeData } from '@services/AsyncStorage.service'
 
 export type RootStackParamList = {
   Register: undefined
@@ -24,6 +24,7 @@ export type RootStackParamList = {
   Main: undefined
   Description1: undefined
   Description2: undefined
+  Calendar: undefined
 }
 
 type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>
@@ -39,7 +40,6 @@ function RegisterScreen({ navigation }: Props) {
 
   const registerUser = async (data: Record<string, any>) => {
     try {
-  
       const res1 = await createUser({
         email: data.email,
         name: data.name,
@@ -47,18 +47,18 @@ function RegisterScreen({ navigation }: Props) {
         password_confirmation: data.password
       })
       await storeData('jwt', res1?.access_token)
-  
+
       const res2 = await createUserInfo({
         alias: data.alias,
         birth_date: data.birth_date,
         department_id: data.department_id,
         gender_id: data.gender_id
       })
-  
+
       const res3 = await createUserInterest({
         interest_ids: data.interest_ids
       })
-  
+
       toast.show('Usuario creado con éxito.', {
         type: 'success',
         placement: 'top',
@@ -96,7 +96,7 @@ function RegisterScreen({ navigation }: Props) {
     }
 
     await registerUser(updatedData)
-  
+
     navigation.navigate('Welcome')
   }
   return (

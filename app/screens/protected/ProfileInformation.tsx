@@ -35,7 +35,11 @@ const ProfileInformation = ({ navigation }: Props) => {
   }
 
   const handlePersonalInfo = () => setShowUserForm(true)
-  const handleCalendar = () => console.log('Go to Calendar')
+
+  const handleCalendar = () => {
+    navigation.navigate('Calendar')
+  }
+
   const handleProtocols = () => console.log('Go to Protocols')
 
   const getUserData = async () => {

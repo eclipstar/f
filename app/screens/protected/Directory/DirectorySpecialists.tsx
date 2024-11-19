@@ -29,7 +29,9 @@ function DirectorySpecialists({ zone }: { zone: Zone }) {
   }, [])
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Logo width={125} height={125} />
+      <View style={styles.item}>
+        <Logo width={125} height={125} />
+      </View>
       <View style={{ width: '50%', marginTop: 45 }}>
         <Button elevated appearance='filled' customRadius={22} color={colors.primary}>
           {zone.zone_name}
@@ -46,6 +48,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     paddingTop: 0
+  },
+  item: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20
   },
   filterContainer: {}
 })

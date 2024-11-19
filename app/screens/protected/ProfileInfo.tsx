@@ -93,7 +93,7 @@ export function ProfileInfo({ onSubmit, userInformation }: Props) {
             <View style={styles.spacing}>
               <Text style={styles.label}>Fecha de nacimiento</Text>
               <View style={styles.dateOfBirthContainer}>
-                <View style={styles.pickerWrapper}>
+                <View style={{ width: 70 }}>
                   <TextField
                     keyBoardType='number-pad'
                     onChangeText={handleChange('day')}
@@ -102,7 +102,7 @@ export function ProfileInfo({ onSubmit, userInformation }: Props) {
                     placeholder='Día'
                   />
                 </View>
-                <View style={styles.pickerWrapper}>
+                <View style={styles.pickerWrapperM}>
                   <Picker
                     selectedValue={values.month}
                     style={styles.picker}
@@ -113,7 +113,7 @@ export function ProfileInfo({ onSubmit, userInformation }: Props) {
                     ))}
                   </Picker>
                 </View>
-                <View style={styles.pickerWrapper}>
+                <View style={{ width: 70 }}>
                   <TextField
                     keyBoardType='number-pad'
                     onChangeText={handleChange('year')}
@@ -166,12 +166,22 @@ const styles = StyleSheet.create({
   },
   pickerWrapper: {
     flex: 1,
+    width: 10,
+    marginHorizontal: 5
+  },
+  pickerWrapperM: {
+    flex: 1,
+    marginHorizontal: 5
+  },
+  pickerWrapperY: {
+    flex: 1,
+    width: 10,
     marginHorizontal: 5
   },
   dateOfBirthContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%'
+    flexDirection: 'row'
+    // justifyContent: 'space-around',
+    // width: '100%'
   },
   picker: {
     flex: 1,

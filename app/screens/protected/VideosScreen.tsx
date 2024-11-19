@@ -10,9 +10,11 @@ import VideoList from '@ui/components/VideoList'
 function VideosScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Logo width={125} height={125} />
-      <DataFilterActions />
       <View style={styles.titleContainer}>
+        <View style={styles.item}>
+          <Logo width={125} height={125} />
+        </View>
+        <DataFilterActions />
         <View style={styles.capsulasEducativasContainer}>
           <Text style={styles.capsulasText}>CAPSULAS </Text>
           <Text style={styles.educativasText}>EDUCATIVAS</Text>
@@ -31,6 +33,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     paddingTop: 0
+  },
+  item: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20
   },
   capsulasEducativasContainer: {
     marginTop: 30,
