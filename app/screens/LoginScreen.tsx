@@ -37,14 +37,8 @@ function LoginScreen({ navigation }: Props) {
   const handleLoginWithEmailAndPassword = async (data: { email: string; password: string }) => {
     try {
       const response = await Login(data)
-      await storeData(
-        'jwt',
-        response?.access_token
-      )
-      await storeData(
-        'user',
-        JSON.stringify(response)
-      )
+      await storeData('jwt', response?.access_token)
+      await storeData('user', JSON.stringify(response))
       toast.show('Bienvenid@.', {
         type: 'success',
         placement: 'top',
@@ -76,7 +70,7 @@ function LoginScreen({ navigation }: Props) {
     try {
       const res = await ForgotPassword(email)
 
-      toast.show('envio de correo exitoso', {
+      toast.show('Envío de correo exitoso', {
         type: 'success',
         placement: 'top',
         duration: 4000,

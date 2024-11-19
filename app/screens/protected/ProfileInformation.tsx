@@ -3,10 +3,14 @@ import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, Vi
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { IGetGeneralUser } from 'interfaces/CreateUser.interface'
+import { IGetGeneralUser, IUpdateUserInfo } from 'interfaces/CreateUser.interface'
+import { useToast } from 'react-native-toast-notifications'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import { getUserInfo } from '@services/GetUserInfo.service'
+import { updateUserInformation } from '@services/setUserUpdate'
+
+import { isNotEmptyObject } from '@utils/helpers'
 
 import { RootStackParamList } from '@screens/RegisterScreen'
 
@@ -19,6 +23,7 @@ interface Props {
 }
 
 const ProfileInformation = ({ navigation }: Props) => {
+  const toast = useToast()
   const [userInformation, setUserInformation] = useState<IGetGeneralUser | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [showUserForm, setShowUserForm] = useState<boolean>(false)
@@ -39,6 +44,9 @@ const ProfileInformation = ({ navigation }: Props) => {
   const handleCalendar = () => {
     navigation.navigate('Calendar')
   }
+  const handleBack = () => {
+    navigation.navigate('Main')
+  }
 
   const handleProtocols = () => console.log('Go to Protocols')
 
@@ -52,6 +60,20 @@ const ProfileInformation = ({ navigation }: Props) => {
     } finally {
       setLoading(false)
     }
+  }
+
+  const updateInformation = async (data: IUpdateUserInfo) => {
+    if (isNotEmptyObject(data)) {
+      const reponse = await updateUserInformation(data)
+      toast.show('Datos actualizados con exito', {
+        type: 'success',
+        placement: 'top',
+        duration: 4000,
+        animationType: 'slide-in'
+      })
+      setUserInformation({ data: { ...reponse.user } })
+    }
+    setShowUserForm(false)
   }
 
   useEffect(() => {
@@ -70,7 +92,7 @@ const ProfileInformation = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
           <Icon name='arrow-back' size={24} color='white' />
         </TouchableOpacity>
         <Text style={styles.title}>Mi perfil</Text>
@@ -116,7 +138,7 @@ const ProfileInformation = ({ navigation }: Props) => {
             </View>
           </>
         ) : (
-          <ProfileInfo userInformation={userInformation} onSubmit={() => setShowUserForm(false)} />
+          <ProfileInfo userInformation={userInformation} onSubmit={updateInformation} />
         )}
       </View>
     </View>

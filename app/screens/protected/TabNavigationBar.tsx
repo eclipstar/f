@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
+import { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 
 import Directorio from '../../assets/icons/directorio.svg'
@@ -6,42 +7,35 @@ import Inicio from '../../assets/icons/home.svg'
 import Juegos from '../../assets/icons/juegos.svg'
 import Perfil from '../../assets/icons/perfil.svg'
 import Videos from '../../assets/icons/videos.svg'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import DirectoryScreen from './Directory/DirectoryScreen'
 import { HomeScreen } from './HomeScreen'
 import { JuegosScreen } from './JuegosScreen'
-import  ProfileInformation  from './ProfileInformation'
+import ProfileInformation from './ProfileInformation'
 import VideosScreen from './VideosScreen'
-import { useEffect } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function TabNavigationBar() {
   const Tab = createBottomTabNavigator()
-//TODO solo pa wachar las env del storage
   useEffect(() => {
     const logAllStorageItems = async () => {
       try {
         const keys = await AsyncStorage.getAllKeys()
         if (keys.length === 0) {
-          console.log("🚀 ~ AsyncStorage ~ No hay datos almacenados.")
           return
         }
-    
         const items = await AsyncStorage.multiGet(keys)
-    
         items.forEach(([key, value]) => {
           console.log(`Clave: ${key}, Valor: ${value}`)
         })
       } catch (error) {
         console.error('🚀 ~ Error al obtener los datos de AsyncStorage:', error)
       }
-      
     }
     logAllStorageItems()
-
   }, [])
-  
+
   return (
     <Tab.Navigator
       initialRouteName='Inicio'
@@ -77,7 +71,7 @@ export function TabNavigationBar() {
       <Tab.Screen name='Juegos' component={JuegosScreen} />
       <Tab.Screen name='Inicio' component={HomeScreen} />
       <Tab.Screen name='Directorio' options={{ unmountOnBlur: true }} component={DirectoryScreen} />
-      <Tab.Screen name='Perfil' options={{ unmountOnBlur: true }} component={ProfileInformation}/>
+      <Tab.Screen name='Perfil' options={{ unmountOnBlur: true }} component={ProfileInformation} />
     </Tab.Navigator>
   )
 }

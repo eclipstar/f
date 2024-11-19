@@ -37,6 +37,12 @@ export interface ICreateUserInfo {
   department_id: string
 }
 
+export interface IUpdateUserInfo {
+  name?: string
+  birth_date?: string
+  email?: string
+}
+
 export interface ICreateUserInterests {
   interest_ids: number[]
 }

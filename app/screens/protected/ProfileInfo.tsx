@@ -12,7 +12,7 @@ import Button from '@ui/components/Button'
 import colors from '@config/theme/colors'
 
 const SignupSchema = Yup.object().shape({
-  alias: Yup.string().min(4, 'Muy corto!').required('El pronombre es requerido'),
+  name: Yup.string().min(4, 'Muy corto!').required('El pronombre es requerido'),
   email: Yup.string().email('Correo inválido').required('El correo es requerido'),
   day: Yup.number().max(31, 'Solo días calendario válidos').required('El día es requerido'),
   month: Yup.number().min(1).max(12).required('El mes es requerido'),
@@ -29,41 +29,63 @@ interface Props {
 
 export function ProfileInfo({ onSubmit, userInformation }: Props) {
   const birthDateParts = userInformation?.data?.birth_date ? userInformation.data.birth_date.split('/') : ['', '', '']
+  const day = birthDateParts[1] || ''
+  const month = birthDateParts[0] ? `${parseInt(birthDateParts[0], 10)}` : ''
+  const year = birthDateParts[2] || ''
+
+  const initialValues = {
+    name: userInformation?.data?.name.trim() || '',
+    email: userInformation?.data?.email.trim() || '',
+    day: day.trim(),
+    month: month.trim(),
+    year: year.trim()
+  }
 
   const months = [
-    { text: 'Seleccione un mes', value: null },
-    { text: 'Enero', value: 1 },
-    { text: 'Febrero', value: 2 },
-    { text: 'Marzo', value: 3 },
-    { text: 'Abril', value: 4 },
-    { text: 'Mayo', value: 5 },
-    { text: 'Junio', value: 6 },
-    { text: 'Julio', value: 7 },
-    { text: 'Agosto', value: 8 },
-    { text: 'Septiembre', value: 9 },
-    { text: 'Octubre', value: 10 },
-    { text: 'Noviembre', value: 11 },
-    { text: 'Diciembre', value: 12 }
+    { text: 'Seleccione un mes', value: '' },
+    { text: 'Enero', value: '1' },
+    { text: 'Febrero', value: '2' },
+    { text: 'Marzo', value: '3' },
+    { text: 'Abril', value: '4' },
+    { text: 'Mayo', value: '5' },
+    { text: 'Junio', value: '6' },
+    { text: 'Julio', value: '7' },
+    { text: 'Agosto', value: '8' },
+    { text: 'Septiembre', value: '9' },
+    { text: 'Octubre', value: '10' },
+    { text: 'Noviembre', value: '11' },
+    { text: 'Diciembre', value: '12' }
   ]
+
+  const generateYears = () => {
+    const currentYear = new Date().getFullYear()
+    const years = []
+    for (let i = 1950; i <= currentYear; i++) {
+      years.push({ text: i.toString(), value: i.toString() })
+    }
+    return years
+  }
+
+  const years = generateYears()
 
   return (
     <ScrollView style={styles.scrollView}>
       <Formik
-        initialValues={{
-          alias: userInformation?.data?.alias || '',
-          email: userInformation?.data?.email || '',
-          day: birthDateParts[1] || '',
-          month: birthDateParts[0] || null,
-          year: birthDateParts[2] || ''
-        }}
+        initialValues={initialValues}
         validationSchema={SignupSchema}
         onSubmit={values => {
-          const dataToSend = {
-            alias: values.alias,
-            email: values.email,
-            birth_date: `${values.month}/${values.day}/${values.year}`
+          const modifiedValues: Partial<typeof initialValues> & { birth_date?: string } = {}
+          Object.keys(initialValues).forEach(key => {
+            const trimmedValue = values[key as keyof typeof initialValues]?.toString().trim()
+            const initialTrimmedValue = initialValues[key as keyof typeof initialValues]?.toString().trim()
+            if (trimmedValue !== initialTrimmedValue) {
+              modifiedValues[key as keyof typeof initialValues] = trimmedValue
+            }
+          })
+          if (modifiedValues.day || modifiedValues.month || modifiedValues.year) {
+            modifiedValues.birth_date = `${values.month}/${values.day}/${values.year}`
           }
-          onSubmit(dataToSend)
+          onSubmit(modifiedValues)
         }}
       >
         {({ handleChange, handleBlur, handleSubmit, values, setFieldValue, errors, touched }: any) => (
@@ -71,12 +93,12 @@ export function ProfileInfo({ onSubmit, userInformation }: Props) {
             <View style={styles.spacing}>
               <Text style={styles.label}>Nombre / Usuario </Text>
               <TextField
-                onChangeText={handleChange('alias')}
-                onBlur={handleBlur('alias')}
-                value={values.alias}
+                onChangeText={handleChange('name')}
+                onBlur={handleBlur('name')}
+                value={values.name}
                 placeholder='Pronombre'
               />
-              {errors.alias && touched.alias && <Text style={styles.errorText}>{errors.alias}</Text>}
+              {errors.name && touched.name && <Text style={styles.errorText}>{errors.name}</Text>}
             </View>
 
             <View style={styles.spacing}>
@@ -113,14 +135,16 @@ export function ProfileInfo({ onSubmit, userInformation }: Props) {
                     ))}
                   </Picker>
                 </View>
-                <View style={{ width: 70 }}>
-                  <TextField
-                    keyBoardType='number-pad'
-                    onChangeText={handleChange('year')}
-                    onBlur={handleBlur('year')}
-                    value={values.year}
-                    placeholder='Año'
-                  />
+                <View style={styles.pickerWrapperM}>
+                  <Picker
+                    selectedValue={values.year}
+                    style={styles.picker}
+                    onValueChange={itemValue => setFieldValue('year', itemValue)}
+                  >
+                    {years.map(el => (
+                      <Picker.Item key={el.value} label={el.text} value={el.value} />
+                    ))}
+                  </Picker>
                 </View>
               </View>
               {errors.day && touched.day && <Text style={styles.errorText}>{errors.day}</Text>}
