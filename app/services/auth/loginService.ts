@@ -8,3 +8,12 @@ export const Login = async (user: { email: string; password: string }) => {
     throw error
   }
 }
+
+export const LogOut = async () => {
+  try {
+    const response = await api.post('/api/auth/logout')
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}

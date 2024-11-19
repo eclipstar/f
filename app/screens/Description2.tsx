@@ -18,19 +18,30 @@ interface Props {
 const Description2Screen = ({ navigation }: Props) => {
   setTimeout(() => {
     navigation.navigate('Description3')
-  }, 5000)
+  }, 3000)
 
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Logo width={200} height={200} />
+        <Logo width={150} height={150} />
       </View>
       <Text style={styles.loadingText}>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-        standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make
-        a type specimen book.
+      La Colectiva Feminista junto con la Fundación Heinrich Böll, la Asociación de Investigación y Especialización sobre Temas Iberoamericanos (AIETI), Fundación de Ayuda contra la Drogadicción (FAD), pensamos en una propuesta para hablar acerca de nuestros derechos, emociones y en la necesidad de contar con herramientas para prevenir y erradicar las violencias desde la promoción de la Educación Integral en Sexualidad, la equidad e inclusión. 
+      </Text>
+      <Text style={styles.loadingText}>
+      Creemos firmemente que las juventudes salvadoreñas debemos ejercer una ciudadanía activa, informada y libre de violencia. Para ello, hemos contado con el respaldo y apoyo financiero de la Unión Europea y AECID.
+      </Text>
+      <Text style={styles.loadingText}>
+      Informa, comparte y aprende sobre los derechos de las juventudes y las diversidades. El conocimiento es una herramienta poderosa.
+      </Text>
+      <Text style={styles.footerTextTitle}>
+      Recuerda, las redes salvan. 
+      </Text>
+      <Text style={styles.footerText}>
+      ¡Actúa, sueña y transforma!
       </Text>
       <View style={styles.stepProgressContainer}>
+        <View style={styles.step} />
         <View style={styles.activeStep} />
         <View style={styles.step} />
       </View>
@@ -40,7 +51,7 @@ const Description2Screen = ({ navigation }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 80,
+    paddingTop: 40,
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#fff',
@@ -49,7 +60,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 60
+    marginBottom: 30
   },
   stepProgressContainer: {
     flexDirection: 'row',
@@ -90,12 +101,29 @@ const styles = StyleSheet.create({
     marginBottom: LayoutUtils.moderateScale(10)
   },
   loadingText: {
-    fontSize: LayoutUtils.scaleFontSize(16),
+    fontSize: LayoutUtils.scaleFontSize(14),
     color: '#000000',
     fontWeight: '300',
     lineHeight: 22,
     textAlign: 'justify',
-    width: '65%'
+    width: '85%'
+  },
+  footerTextTitle: {
+    marginTop:10,
+    width: '85%',
+    fontSize: LayoutUtils.moderateScale(18),
+    textAlign: 'center',
+    color: colors.secondaryTextColor,
+    
+  },
+  footerText: {
+    // marginTop:10,
+    width: '85%',
+    fontSize: LayoutUtils.moderateScale(20),
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: colors.secondaryTextColor,
+    marginBottom: LayoutUtils.moderateScale(20)
   }
 })
 

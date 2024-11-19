@@ -1,60 +1,106 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '@screens/RegisterScreen';
+import { IGetGeneralUser } from 'interfaces/CreateUser.interface';
+import { getUserInfo } from '@services/GetUserInfo.service';
 
-const ProfileInformation: React.FC = () => {
-  const name = 'Michelle Ruiz';
-  const email = 'gmichelle@gmail.com';
-  const photo = 'https://s3-alpha-sig.figma.com/img/f4d2/7ee5/ab010fa5906a730eb7e8999913ea2dd0?Expires=1733097600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=d7exC0svlh1AE60GvmuzqJz0zzYa-vYq6b6e2GH5iF9Hzh0XjQq2IIWPNlbNbWHUS4Tm-jYxHq0Hiu0QLiPz-dNwSIV9hITQAPM1306i0zy5YeIO4kQiXgdqoB6y9bPwyhrCDgDxHA7tQjTwfmwnOiGUxCMRTiRXiXVTz-cr5to9kkfC8sDMGpZNn9Ewu9dAYQKETytB7oGipmGor7OFVvI~dBaS5KIHrIg6hJgFcQbYydn0kjoRO3-rPZhvucES7WmR12U~P~iOxDiLxfJrUldNP-fyZv6dq2ee1FBzxFyMfzyxG7UDhcjBMBbropDuHrqpbxoe8snF-FAi92aPJA__';
+type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
+
+interface Props {
+  navigation: ProfileScreenNavigationProp;
+}
+
+const ProfileInformation = ({ navigation }: Props) => {
+  const [userInformation, setUserInformation] = useState<IGetGeneralUser | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleEdit = () => console.log('Edit Profile');
-  const handleLogout = () => console.log('Logout');
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('jwt'); 
+      navigation.navigate('Login'); 
+    } catch (error) {
+      Alert.alert('Error', 'Hubo un problema al cerrar sesión. Intenta de nuevo.');
+      console.error('Logout error:', error);
+    }
+  };
+
   const handlePersonalInfo = () => console.log('Go to Personal Info');
   const handleCalendar = () => console.log('Go to Calendar');
   const handleProtocols = () => console.log('Go to Protocols');
 
+  const getUserData = async () => {
+    try {
+      const userData = await getUserInfo();
+      setUserInformation(userData);
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+      Alert.alert('Error', 'No se pudieron cargar los datos del usuario.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#6A1B9A" />
+        <Text style={styles.loadingText}>Cargando...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton}>
           <Icon name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
         <Text style={styles.title}>Mi perfil</Text>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: photo }} style={styles.profileImage} />
+          <Image
+            source={{
+              uri: userInformation?.data?.avatar ?? 'https://via.placeholder.com/100',
+            }}
+            style={styles.profileImage}
+          />
           <TouchableOpacity style={styles.editIcon} onPress={handleEdit}>
             <Icon name="camera-alt" size={18} color="white" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.email}>{email}</Text>
+        <Text style={styles.name}>{userInformation?.data?.name ?? 'No name available'}</Text>
+        <Text style={styles.email}>{userInformation?.data?.email ?? 'No email available'}</Text>
       </View>
 
-      {/* Main Body */}
       <View style={styles.body}>
         <TouchableOpacity style={styles.button} onPress={handlePersonalInfo}>
-          <Icon name="person" size={24} color="#6A1B9A" />
+          <Icon name="person" size={45} color="#6A1B9A" />
           <Text style={styles.buttonText}>Información personal</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleCalendar}>
-          <Icon name="calendar-today" size={24} color="#6A1B9A" />
+          <Icon name="calendar-today" size={45} color="#6A1B9A" />
           <Text style={styles.buttonText}>Calendario Menstrual</Text>
         </TouchableOpacity>
 
-        {/* Footer Inside Body */}
         <View style={styles.footer}>
           <View>
-          <TouchableOpacity style={styles.footerButton} onPress={handleProtocols}>
-            <Icon name="security" size={20} color="#6A1B9A" />
-            <Text style={styles.footerText}>Protocolos de seguridad</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.footerButton} onPress={handleProtocols}>
+              <Icon name="security" size={20} color="#6A1B9A" />
+              <Text style={styles.footerText}>Protocolos de seguridad</Text>
+            </TouchableOpacity>
           </View>
           <View>
-          <TouchableOpacity style={styles.footerButton} onPress={handleLogout}>
-            <Icon name="logout" size={20} color="#6A1B9A" />
-            <Text style={styles.footerText}>Cerrar Sesión</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.footerButton} onPress={handleLogout}>
+              <Icon name="logout" size={20} color="#6A1B9A" />
+              <Text style={styles.footerText}>Cerrar Sesión</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -66,6 +112,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#6A1B9A',
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+  },
+  loadingText: {
+    marginTop: 10,
+    color: '#6A1B9A',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   header: {
     alignItems: 'center',
@@ -124,16 +182,16 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#F3E5F5',
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 15,
     borderRadius: 10,
     marginVertical: 10,
-    width: '80%',
+    width: '35%',
   },
   buttonText: {
-    marginLeft: 10,
+    textAlign:'center',
     fontSize: 16,
     color: '#6A1B9A',
     fontWeight: 'bold',

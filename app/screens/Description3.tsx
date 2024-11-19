@@ -27,7 +27,7 @@ const Description3Screen = ({ navigation }: Props) => {
     setpatreons(res.data)
     setTimeout(() => {
       navigation.navigate('Main')
-    }, 5000)
+    }, 3000)
   }
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const Description3Screen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Con el apoyo de</Text>
+      <Text style={styles.welcomeText}>CON EL APOYO DE</Text>
       <FlatList
         data={patreons}
         renderItem={({ item }) => <Patreon url={item.sponsor_image} />}
@@ -51,7 +51,6 @@ const Description3Screen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 110,
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: LayoutUtils.moderateScale(20)
@@ -80,11 +79,11 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   welcomeText: {
-    fontSize: LayoutUtils.moderateScale(24),
+    fontSize: LayoutUtils.moderateScale(35),
     fontWeight: 'bold',
     textAlign: 'center',
     color: colors.secondaryTextColor,
-    marginBottom: LayoutUtils.moderateScale(40)
+    marginBottom: LayoutUtils.moderateScale(20)
   },
   loadingText: {
     fontSize: LayoutUtils.scaleFontSize(16),

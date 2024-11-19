@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import { useEffect, useState } from 'react'
-import { FlatList, ScrollView, StyleSheet } from 'react-native'
+import { FlatList, ScrollView, StyleSheet, View } from 'react-native'
 
 import Logo from '../../../logo.svg'
 import { HomeImage } from 'interfaces/GetHomeImgs.interface'
@@ -79,31 +79,29 @@ export function HomeScreen() {
         onEmotionSelect={handleEmotionSelect} 
       />
       )}
+      <View style={styles.item}>
+        <Logo  width={125} height={125} />
+        <FlatList
+          style={{ marginBottom: 30 }}
+          data={imgsHome}
+          renderItem={({ item }) => renderItem(item)}
+          keyExtractor={item => item.id.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.listContainer}
+        />
 
-      {/* Logo */}
-      <Logo width={125} height={125} />
-
-      {/* Lista scrolleable horizontal */}
-      <FlatList
-        style={{ marginBottom: 30 }}
-        data={imgsHome}
-        renderItem={({ item }) => renderItem(item)}
-        keyExtractor={item => item.id.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.listContainer}
-      />
-
-      <Carousel data={carrouselImgs} />
-      <FlatList
-        style={{ marginTop: 30, marginBottom: 150 }}
-        data={imgsHome}
-        renderItem={({ item }) => renderItem(item)}
-        keyExtractor={item => item.id.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.listContainer}
-      />
+        <Carousel data={carrouselImgs} />
+        <FlatList
+          style={{ marginTop: 30, marginBottom: 150 }}
+          data={imgsHome}
+          renderItem={({ item }) => renderItem(item)}
+          keyExtractor={item => item.id.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.listContainer}
+        />
+      </View>
     </ScrollView>
   )
 }
@@ -114,6 +112,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: '#fff'
+  },
+  item:{
+    justifyContent:'center',
+    alignItems:'center',
+    marginTop:20
   },
   logo: {
     resizeMode: 'contain',

@@ -36,7 +36,7 @@ export function TabNavigationBar() {
       } catch (error) {
         console.error('🚀 ~ Error al obtener los datos de AsyncStorage:', error)
       }
-      await AsyncStorage.clear()
+      
     }
     logAllStorageItems()
 

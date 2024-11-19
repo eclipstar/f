@@ -18,19 +18,23 @@ interface Props {
 const Description1Screen = ({ navigation }: Props) => {
   setTimeout(() => {
     navigation.navigate('Description2')
-  }, 5000)
+  }, 3000)
 
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         <Logo width={200} height={200} />
       </View>
-      <Text style={styles.welcomeText}>¡Bienvenido/a!</Text>
+      <Text style={styles.welcomeText}>¡Bienvenidas/os/es!</Text>
 
       <Text style={styles.loadingText}>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-        standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make
-        a type specimen book.
+      ¡Nos alegra e inspira el tenerte en nuestra comunidad INCLUD! </Text>
+      <Text style={styles.loadingText}>
+      Esta plataforma ha sido diseñada para ofrecerte una experiencia única y fácil de usar, en la cual podrás encontrar todo lo que necesitas para conocer más sobre tus derechos y acceder a información sobre servicios, al alcance de tu mano. No dudes en explorar todas las funciones que hemos preparado para ti y en contactarnos si necesitas apoyo. Recuerda que cuando nos juntamos somos más fuertes.
+      </Text>
+
+      <Text style={styles.footerText}>
+      ¡Luchemos por un mundo más justo e inclusivo para todas y todes!
       </Text>
       <View style={styles.stepProgressContainer}>
         <View style={styles.activeStep} />
@@ -97,7 +101,16 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     lineHeight: 22,
     textAlign: 'justify',
-    width: '65%'
+    width: '85%'
+  },
+  footerText: {
+    marginTop:10,
+    width: '85%',
+    fontSize: LayoutUtils.moderateScale(20),
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: colors.secondaryTextColor,
+    marginBottom: LayoutUtils.moderateScale(20)
   }
 })
 

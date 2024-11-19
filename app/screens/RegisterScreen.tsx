@@ -14,6 +14,7 @@ import { ThirdStepForm } from '@ui/Forms/Register/ThirdStepForm'
 import { createUserInfo } from '@services/auth/createUserInfo'
 import { createUserInterest } from '@services/auth/createUserInterests'
 import { createUser } from '@services/auth/registerUser'
+import { storeData } from '@services/AsyncStorage.service'
 
 export type RootStackParamList = {
   Register: undefined
@@ -36,57 +37,66 @@ function RegisterScreen({ navigation }: Props) {
   const [step, setstep] = useState<number>(1)
   const toast = useToast()
 
-  const registerUser = async () => {
+  const registerUser = async (data: Record<string, any>) => {
     try {
+  
       const res1 = await createUser({
-        email: registerData.email,
-        name: registerData.name,
-        password: registerData.password,
-        password_confirmation: registerData.password
+        email: data.email,
+        name: data.name,
+        password: data.password,
+        password_confirmation: data.password
       })
-
+      await storeData('jwt', res1?.access_token)
+  
       const res2 = await createUserInfo({
-        alias: registerData.alias,
-        birth_date: registerData.birth_date,
-        department_id: registerData.department_id,
-        gender_id: registerData.gender_id
+        alias: data.alias,
+        birth_date: data.birth_date,
+        department_id: data.department_id,
+        gender_id: data.gender_id
       })
-
+  
       const res3 = await createUserInterest({
-        email: registerData.email,
-        interests: registerData.interest
+        interest_ids: data.interest_ids
       })
-
-
-      toast.show('Usuario creado con exito.', {
+  
+      toast.show('Usuario creado con éxito.', {
         type: 'success',
         placement: 'top',
         icon: <OKicon />,
         duration: 4000,
         animationType: 'slide-in'
       })
-    } catch (error) {
-      console.error('Ocurrio un error al crear al usuario', error)
+    } catch (error: any) {
+      console.error('Ocurrió un error al crear al usuario', error)
     }
   }
 
   const handleFirstStep = (data: User) => {
-    setregisterData({ ...registerData, ...data })
+    setregisterData(prevState => ({
+      ...prevState,
+      ...data
+    }))
     setUser(data)
     setstep(2)
   }
 
   const handleSecondStep = (data: User) => {
-    setregisterData({ ...registerData, ...data })
+    setregisterData(prevState => ({
+      ...prevState,
+      ...data
+    }))
     setUser(data)
     setstep(3)
   }
 
   const handleThirdStep = async (data: User) => {
-    setUser(data)
-    setregisterData({ ...registerData, ...data })
-    await registerUser()
-    // setIsLoggedIn(true)
+    const updatedData = {
+      ...registerData,
+      ...data
+    }
+
+    await registerUser(updatedData)
+  
     navigation.navigate('Welcome')
   }
   return (

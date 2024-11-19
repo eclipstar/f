@@ -27,7 +27,7 @@ const SignupSchema = Yup.object().shape({
     .min(1950, 'Anio no puede ser menor 1950')
     .max(new Date().getFullYear(), `El anio no debe ser mayor a ${new Date().getFullYear()}`)
     .required('El anio es requerido'),
-  gender_id: Yup.string().required('Gnero es requerido'),
+  gender_id: Yup.string().required('Genero es requerido'),
   department_id: Yup.string().required('El departamento es requerido')
 })
 
@@ -88,7 +88,7 @@ export function SecondStepForm({ onSubmit }: Props) {
               alias: values.alias,
               gender_id: values.gender_id,
               department_id: values.department_id,
-              birth_date: `${values.day}/${values.month}/${values.year}`
+              birth_date: `${values.month}/${values.day}/${values.year}`
             }
             onSubmit(dataToSend)
           }}

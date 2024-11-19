@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, StyleSheet, Text, View } from 'react-native'
 
 import Logo from '../../logo.svg'
@@ -31,15 +31,19 @@ function LoginScreen({ navigation }: Props) {
   const toast = useToast()
   const [email, setemail] = useState('')
   const handleLoginWithGoogle = () => {
-    Alert.alert('Registro con Google', 'Has presionado REcGISTRAR CON GOOGLE')
+    Alert.alert('Registro con Google', 'Has presionado REGISTRAR CON GOOGLE')
   }
 
   const handleLoginWithEmailAndPassword = async (data: { email: string; password: string }) => {
     try {
-      await Login(data)
+      const response = await Login(data)
       await storeData(
         'jwt',
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiNjIwOTI4MzU3MjFiZWJmOTgyZjQzZGZjMGI3ZTZiMmQ0MDFhYjU3NjBiMTFjMmJhMDJlYThiMmU1Mjk1ODg1ODAzYjJlZWI1NDVmZWJiOTYiLCJpYXQiOjE3MzEzODgyODYuNTEwOTg4LCJuYmYiOjE3MzEzODgyODYuNTEwOTkyLCJleHAiOjE3NjI5MjQyODYuNDk1MjEyLCJzdWIiOiIxMCIsInNjb3BlcyI6W119.AZC7wLvCyuCjpm-iBn-5uSbXR-jybHNf5XK_MxQrPA7fbjfKHtab84589ZZ12RAmHsSVHlpIrmZ4RtW5WgzXGsV5ESy9GM17PW1dWgjJKAJznPBIesDi04IQto3ppMB4vU9rRH-A3Yk4wsg-9ipQp_LmMki7jGJSt366QSFu9RL_PkyVLHke3T8_MFx-zPl-PEqQPAoFKoQoaf63ZfosBG0-oeCGrliyV9ALgbR2qE8GnSqPxn4iUF07FThp1OJpA9Pa8MeDY301wWJ3swb3jIlCOiGkPxLc_Mt4kJd9yVrFStVla39lZiTU0geq-Ny5y7gBV34bRbQgT4LQoXkVEa9pQZBpZQmH6Cl9oGmz0I3L3urppgtzg_sGaVF-roAHS8XwDXBTG6e8RwCX0sx-bgFLwdYk6R3uLXs868QFt_D-I6MpMI0apVKpuPZ731BDJxLo1G50zO0M0BgvUzfgl6Hcbr10iM5nK6TDU_0XDeaCfBc8SHyoyKUjgxhbOQouiY5giKCE4Pb815Br_ox1IiUVclHAojNXtHW-rKKSEK-IUA43j7wLaBjypLXBLkjofWyqLkoUTKI7MUNNQv4PybM7sabGLUvypQX5WDv0l5pNsKFeT96RzdTUtnje25aef6hC1lk_1mRhVAu7qRWA1S_1DGcWgaWGpxdDPPqg34E'
+        response?.access_token
+      )
+      await storeData(
+        'user',
+        JSON.stringify(response)
       )
       toast.show('Bienvenid@.', {
         type: 'success',

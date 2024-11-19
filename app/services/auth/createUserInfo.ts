@@ -5,7 +5,7 @@ export const createUserInfo = async (userData: ICreateUserInfo) => {
   try {
     const response = await api.post('/api/auth/register/info', userData)
     return response.data
-  } catch (error) {
+  } catch (error: any) {
     throw error
   }
 }

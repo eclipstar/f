@@ -1,16 +1,9 @@
-/* eslint-disable react/no-unstable-nested-components */
-
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import BootSplash from 'react-native-bootsplash'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import 'react-native-gesture-handler'
 import { PaperProvider } from 'react-native-paper'
 import { ToastProvider } from 'react-native-toast-notifications'
@@ -25,21 +18,35 @@ import RegisterScreen from '@screens/RegisterScreen'
 import SignUpOptsScreen from '@screens/SignUpOptsScreen'
 import WelcomeScreen from '@screens/WelcomeScreen'
 import { TabNavigationBar } from '@screens/protected/TabNavigationBar'
+import { View, ActivityIndicator } from 'react-native'
 
 const App: React.FC = () => {
   const Stack = createStackNavigator()
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
 
   useEffect(() => {
-    ;(async () => {
+    const checkAuth = async () => {
+      const token = await AsyncStorage.getItem('jwt')
+      setIsAuthenticated(!!token) 
       await BootSplash.hide({ fade: true })
-    })()
+    }
+    checkAuth()
   }, [])
+
+  if (isAuthenticated === null) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    )
+  }
 
   return (
     <ToastProvider>
       <PaperProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName='Main'>
+          <Stack.Navigator initialRouteName={isAuthenticated ? 'Main' : 'Login'}>
+            {/* Rutas públicas */}
             <Stack.Screen name='SignUpOpts' options={{ headerShown: false }} component={SignUpOptsScreen} />
             <Stack.Screen name='Register' options={{ headerShown: false }} component={RegisterScreen} />
             <Stack.Screen name='Login' options={{ headerShown: false }} component={LoginScreen} />
@@ -47,14 +54,9 @@ const App: React.FC = () => {
             <Stack.Screen name='Description1' options={{ headerShown: false }} component={Description1Screen} />
             <Stack.Screen name='Description2' options={{ headerShown: false }} component={Description2Screen} />
             <Stack.Screen name='Description3' options={{ headerShown: false }} component={Description3Screen} />
-            <Stack.Screen
-              name='Main'
-              options={{
-                header: () => <Header />,
-                headerShown: true
-              }}
-              component={TabNavigationBar}
-            />
+
+            {/* Ruta protegida */}
+            <Stack.Screen name='Main' options={{headerShown: false}} component={TabNavigationBar} />
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>

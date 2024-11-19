@@ -4,6 +4,31 @@ export interface ICreateUser {
   password: string
   password_confirmation: string
 }
+export interface IUserData {
+  id: number
+  name: string
+  email: string
+  alias: string
+  birth_date: string
+  gender_id: number
+  department_id: number
+  email_verified_at: string | null
+  avatar: string | null
+  remember_token: string | null
+  google_id: string | null
+  gender: {
+    id: number
+    gender: string
+  }
+  department: {
+    id: number
+    department_name: string
+  }
+}
+
+export interface IGetGeneralUser {
+  data?: IUserData
+}
 
 export interface ICreateUserInfo {
   alias: string
@@ -13,6 +38,5 @@ export interface ICreateUserInfo {
 }
 
 export interface ICreateUserInterests {
-  email: string
-  interests: string[]
+  interest_ids: number[]
 }

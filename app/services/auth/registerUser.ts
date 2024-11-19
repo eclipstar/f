@@ -6,7 +6,7 @@ export const createUser = async (userData: ICreateUser) => {
     const response = await api.post('/api/register', userData)
     // AsyncStorage.setItem('@storage_key', response.data.);
     return response.data
-  } catch (error) {
-    throw error
+  } catch (error: any) {
+    throw error 
   }
 }

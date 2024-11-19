@@ -15,7 +15,7 @@ import colors from '@config/theme/colors'
 const SignupSchema = Yup.object().shape({
   name: Yup.string().min(4, 'Muy corto!').required('El nombre es requerido'),
   email: Yup.string().email('Email Invalido').required('Email es requerido'),
-  password: Yup.string().min(6, 'Muy corto!').required('Contraseña es requerida')
+  password: Yup.string().min(8, 'Muy corto!').required('Contraseña es requerida')
 })
 
 interface Props {

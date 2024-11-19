@@ -17,13 +17,13 @@ interface Props {
 }
 
 export function ThirdStepForm({ onSubmit }: Props) {
-  const [selected, setselected] = useState<string[]>([])
+  const [selected, setselected] = useState<number[]>([])
   const [interests, setinterests] = useState<Interest[]>([])
   const handleConfirm = () => {
-    onSubmit({ interest: selected })
+    onSubmit({ interest_ids: selected })
   }
 
-  const handleOnpress = (item: string) => {
+  const handleOnpress = (item: number) => {
     if (selected.includes(item)) return setselected(selected.filter(el => el !== item))
     setselected([...selected, item])
   }
@@ -58,8 +58,8 @@ export function ThirdStepForm({ onSubmit }: Props) {
           contentContainerStyle={styles.listContainer}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => handleOnpress(item.interest)}
-              style={{ ...styles.item, backgroundColor: selected.includes(item.interest) ? '#ec742ed9' : '#FF6F151F' }}
+              onPress={() => handleOnpress(item.id)}
+              style={{ ...styles.item, backgroundColor: selected.includes(item.id) ? '#ec742ed9' : '#FF6F151F' }}
             >
               <Text style={styles.itemText}>{item.interest}</Text>
             </TouchableOpacity>
