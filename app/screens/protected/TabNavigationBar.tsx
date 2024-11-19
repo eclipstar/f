@@ -11,7 +11,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import DirectoryScreen from './Directory/DirectoryScreen'
 import { HomeScreen } from './HomeScreen'
 import { JuegosScreen } from './JuegosScreen'
-import { ProfileScreen } from './ProfileScreen'
+import  ProfileInformation  from './ProfileInformation'
 import VideosScreen from './VideosScreen'
 
 export function TabNavigationBar() {
@@ -52,7 +52,7 @@ export function TabNavigationBar() {
       <Tab.Screen name='Juegos' component={JuegosScreen} />
       <Tab.Screen name='Inicio' component={HomeScreen} />
       <Tab.Screen name='Directorio' options={{ unmountOnBlur: true }} component={DirectoryScreen} />
-      <Tab.Screen name='Perfil' options={{ unmountOnBlur: true }} component={ProfileScreen} />
+      <Tab.Screen name='Perfil' options={{ unmountOnBlur: true }} component={ProfileInformation}/>
     </Tab.Navigator>
   )
 }
