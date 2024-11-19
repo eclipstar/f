@@ -10,26 +10,76 @@ import { SliderCard } from '@ui/components/SliderCard'
 
 import { CarrouselImg, GetCarrouselImages } from '@services/home/GetCrrouselmages.service'
 import { GetImagesHome } from '@services/home/GetHomeImages.service'
+import ModalComponent from './Modal'
+import { GetEmotions } from '@services/GetEmotions.service'
+import { Emotion } from 'interfaces/Emotion.interface'
+import { createDailyEmotion } from '@services/setDailyEmotion'
+import { storeData } from '@services/AsyncStorage.service'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function HomeScreen() {
   const renderItem = (item: HomeImage) => <SliderCard item={item} />
   const [imgsHome, setimgsHome] = useState<HomeImage[]>([])
+  const [emotions, setEmotions] = useState<Emotion[]>([])
   const [carrouselImgs, setCarrouselImgs] = useState<CarrouselImg[]>([])
+  const [isModalVisible, setIsModalVisible] = useState(false) 
+  
+  const handleEmotionSelect = async (emotion: string) => {
+    try {
+      const response = await createDailyEmotion({ emotion })
+      return {
+        tip_title: response.data.tip_title,
+        tip_description: response.data.tip_description
+      }
+    } catch (error) {
+      console.error('Error sending emotion:', error)
+      return null
+    }
+  }
 
+  const checkModalVisibility = async () => {
+    try {
+      const lastShownDate = await AsyncStorage.getItem('lastModalDate')
+      const today = new Date().toISOString().split('T')[0] 
+      if (lastShownDate !== today) {
+        setIsModalVisible(true) 
+        await storeData('lastModalDate', today)
+      }
+    } catch (error) {
+      console.error('Error checking modal visibility:', error)
+    }
+  }
+  
   const getHomeImage = async () => {
     const imgs = await GetImagesHome()
     const carrousel = await GetCarrouselImages()
     setimgsHome(imgs.data)
     setCarrouselImgs(carrousel.data)
-    console.log(imgs)
+  }
+
+  const fetchEmotions = async () => {
+    const res = await GetEmotions()
+    setEmotions(res.data)
   }
 
   useEffect(() => {
     getHomeImage()
+    fetchEmotions()
+    checkModalVisibility()
   }, [])
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {/* Modal */}
+      {isModalVisible && (
+      <ModalComponent
+        emotions={emotions}
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onEmotionSelect={handleEmotionSelect} 
+      />
+      )}
+
       {/* Logo */}
       <Logo width={125} height={125} />
 

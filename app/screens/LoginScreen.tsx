@@ -71,7 +71,6 @@ function LoginScreen({ navigation }: Props) {
 
     try {
       const res = await ForgotPassword(email)
-      console.log(res)
 
       toast.show('envio de correo exitoso', {
         type: 'success',

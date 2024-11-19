@@ -57,9 +57,6 @@ function RegisterScreen({ navigation }: Props) {
         interests: registerData.interest
       })
 
-      console.log('RES 1 >>>>', res1)
-      console.log('RES 2 >>>>', res2)
-      console.log('RES 3 >>>>', res3)
 
       toast.show('Usuario creado con exito.', {
         type: 'success',
@@ -74,21 +71,18 @@ function RegisterScreen({ navigation }: Props) {
   }
 
   const handleFirstStep = (data: User) => {
-    console.log(data)
     setregisterData({ ...registerData, ...data })
     setUser(data)
     setstep(2)
   }
 
   const handleSecondStep = (data: User) => {
-    console.log(data)
     setregisterData({ ...registerData, ...data })
     setUser(data)
     setstep(3)
   }
 
   const handleThirdStep = async (data: User) => {
-    console.log(data)
     setUser(data)
     setregisterData({ ...registerData, ...data })
     await registerUser()

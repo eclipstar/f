@@ -61,8 +61,6 @@ export function SecondStepForm({ onSubmit }: Props) {
   }
   const getDeptos = async () => {
     const res = await GetDeparments()
-    console.log(res)
-
     setDptos(res.data)
   }
 
