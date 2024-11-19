@@ -18,9 +18,10 @@ export function DirectoryMain({ handleClick }: { handleClick: Function }) {
       </View>
       <View style={styles.contentContainer}>
         <Text style={styles.content}>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book.
+        ¡Bienvenidas/os/es  la colectiva feminista en articulación con organizaciones territoriales ponemos a disposición de las juventudes diversas, un directorio telefónico de Instituciones y organizaciones locales que poseen servicios de prevención y atención cercanos a tu residencia.
+        </Text>
+        <Text style={styles.content}>
+        Aquí encontrarás información relevante según tu zona de residencia, para que pueden ser de  ayuda en un momento de emergencia y/o una situación de violencia. Explora, conecta y conoce los servicios institucionales de tu localidad a través de INCLUD.
         </Text>
       </View>
       <View style={{ marginBottom: 100, width: '95%' }}>
@@ -56,10 +57,11 @@ const styles = StyleSheet.create({
     lineHeight: 39
   },
   titleContainer: {
-    marginTop: 100
+    marginTop: 25
   },
   contentContainer: {
     marginTop: 10,
+    fontSize:10,
     width: '80%'
   },
   content: {

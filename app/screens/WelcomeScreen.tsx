@@ -20,7 +20,7 @@ const WelcomeScreen = ({ navigation }: Props) => {
 
   setTimeout(() => {
     navigation.navigate('Main')
-  }, 5000)
+  }, 3000)
 
   return (
     <View style={styles.container}>

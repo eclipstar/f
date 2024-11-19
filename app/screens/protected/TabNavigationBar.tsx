@@ -13,10 +13,35 @@ import { HomeScreen } from './HomeScreen'
 import { JuegosScreen } from './JuegosScreen'
 import  ProfileInformation  from './ProfileInformation'
 import VideosScreen from './VideosScreen'
+import { useEffect } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function TabNavigationBar() {
   const Tab = createBottomTabNavigator()
+//TODO solo pa wachar las env del storage
+  useEffect(() => {
+    const logAllStorageItems = async () => {
+      try {
+        const keys = await AsyncStorage.getAllKeys()
+        if (keys.length === 0) {
+          console.log("🚀 ~ AsyncStorage ~ No hay datos almacenados.")
+          return
+        }
+    
+        const items = await AsyncStorage.multiGet(keys)
+    
+        items.forEach(([key, value]) => {
+          console.log(`Clave: ${key}, Valor: ${value}`)
+        })
+      } catch (error) {
+        console.error('🚀 ~ Error al obtener los datos de AsyncStorage:', error)
+      }
+      await AsyncStorage.clear()
+    }
+    logAllStorageItems()
 
+  }, [])
+  
   return (
     <Tab.Navigator
       initialRouteName='Inicio'
