@@ -27,7 +27,7 @@ const ProfileInformation = ({ navigation }: Props) => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('jwt')
-      navigation.navigate('Login')
+      navigation.navigate('SignUpOpts')
     } catch (error) {
       Alert.alert('Error', 'Hubo un problema al cerrar sesión. Intenta de nuevo.')
       console.error('Logout error:', error)
