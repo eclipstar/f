@@ -12,7 +12,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import DirectoryScreen from './Directory/DirectoryScreen'
 import { HomeScreen } from './HomeScreen'
-import { JuegosScreen } from './JuegosScreen'
+import JuegosScreen from './JuegosScreen'
 import ProfileInformation from './ProfileInformation'
 import VideosScreen from './VideosScreen'
 
