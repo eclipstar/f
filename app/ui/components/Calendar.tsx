@@ -6,7 +6,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react'
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import { IGetSintoms, IGetTip, Sintom, Tip } from 'interfaces/Sintom.interface'
 import { Calendar } from 'react-native-calendars'
@@ -39,6 +39,7 @@ export function PeriodCalendar() {
   const [showModal, setshowModal] = useState(true)
   const [selectedSintom, setselectedSintom] = useState<Sintom>()
   const [tip, settip] = useState<Tip>()
+  const [isEditCalendar, setisEditCalendar] = useState(false)
 
   const themeStyle = {
     selectedDayBackgroundColor: '#fdcfd9',
@@ -107,8 +108,7 @@ export function PeriodCalendar() {
 
   const calculatePeriodDays = (startDay: string): string[] => {
     const [year, month, day] = startDay.split('-')
-    const endDay = new Date(startDay)
-    endDay.setDate(Number(day) + 5)
+
     const periodDaysArray = []
     for (let i = 0; i < 5; i++) {
       if (i === 0) {
@@ -142,6 +142,37 @@ export function PeriodCalendar() {
     await getTip()
   }
 
+  const saveCalendar = async () => {
+    const endDay = new Date(selected)
+    endDay.setDate(Number(endDay.getDate()) + 5)
+    const dates = [selected, formatDate(endDay)]
+
+    try {
+      const body = {
+        start_date: dates[0],
+        end_date: dates[1]
+      }
+      console.log(body)
+      const res = await api.post('/api/v1/menstrual-calendar', body)
+
+      toast.show('Periodo menstrual guardado con exito!.', {
+        type: 'success',
+        placement: 'top',
+        duration: 4000,
+        animationType: 'slide-in'
+      })
+    } catch (error) {
+      console.log(error)
+
+      toast.show('No se pudo guardar el periodo menstrual.', {
+        type: 'error',
+        placement: 'top',
+        duration: 4000,
+        animationType: 'slide-in'
+      })
+    }
+  }
+
   const renderItem = ({ item }: { item: Sintom }) => (
     <TouchableOpacity onPress={() => pressSintom(item)} style={styles.itemContainer}>
       {item.id > 1 ? (
@@ -172,6 +203,19 @@ export function PeriodCalendar() {
         markingType={'period'}
         theme={themeStyle}
       />
+      {!isEditCalendar ? (
+        <TouchableOpacity onPress={() => setisEditCalendar(true)} style={styles.editCalendarBtn}>
+          <Text style={{ fontWeight: '600', color: 'white', textAlign: 'center' }}>Editar fechas de periodo</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          onPress={selected ? saveCalendar : () => Alert.alert('Atencion', 'Selecciona un periodo de fechas')}
+          style={styles.editCalendarBtn}
+        >
+          <Text style={{ fontWeight: '600', color: 'white', textAlign: 'center' }}>Aplicar</Text>
+        </TouchableOpacity>
+      )}
+
       <GenericModalComponent
         isVisible={showModal}
         onClose={() => {
@@ -233,6 +277,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     bottom: -10,
+    borderRadius: 20
+  },
+  editCalendarBtn: {
+    marginTop: 100,
+    padding: 15,
+    width: '100%',
+    backgroundColor: '#B045CB',
+    alignSelf: 'center',
     borderRadius: 20
   },
   gotoCalendar: {
