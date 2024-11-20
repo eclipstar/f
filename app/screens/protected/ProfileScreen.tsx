@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: LayoutUtils.moderateScale(20),
-    paddingTop: 0
+    paddingTop: 70
   },
   title: {
     marginTop: LayoutUtils.moderateVerticalScale(45),

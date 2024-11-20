@@ -8,6 +8,7 @@
 import { useEffect, useState } from 'react'
 import { Alert, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
+import { IGetPeriodDays, Period } from 'interfaces/Period.interface'
 import { IGetSintoms, IGetTip, Sintom, Tip } from 'interfaces/Sintom.interface'
 import { Calendar } from 'react-native-calendars'
 import { FlatList } from 'react-native-gesture-handler'
@@ -40,6 +41,7 @@ export function PeriodCalendar() {
   const [selectedSintom, setselectedSintom] = useState<Sintom>()
   const [tip, settip] = useState<Tip>()
   const [isEditCalendar, setisEditCalendar] = useState(false)
+  const [periodDaysResponse, setperiodDaysResponse] = useState<Period[]>([])
 
   const themeStyle = {
     selectedDayBackgroundColor: '#fdcfd9',
@@ -55,9 +57,12 @@ export function PeriodCalendar() {
 
   useEffect(() => {
     getSintoms()
+    getPeriodDays()
   }, [])
 
-  const changeDay = (day: DayInterface) => {
+  const changeDay = (day: DayInterface, userClick: boolean = false) => {
+    console.log('==============================', day)
+    if (!isEditCalendar && userClick) return Alert.alert('Alerta', 'Cambiar a modo edicion.')
     setSelected(day.dateString)
     let days = calculatePeriodDays(day.dateString)
     setPeriodDays(
@@ -84,6 +89,27 @@ export function PeriodCalendar() {
       setsintoms(updatedData)
     } catch (error) {
       toast.show('No se pudo obtener los sintomas.', {
+        type: 'error',
+        placement: 'top',
+        duration: 4000,
+        animationType: 'slide-in'
+      })
+    }
+  }
+
+  const getPeriodDays = async () => {
+    try {
+      const res = await api.get<IGetPeriodDays>('/api/v1/menstrual-calendar')
+      setperiodDaysResponse(res.data.data)
+      changeDay({
+        dateString: formatDate(new Date(res.data.data[res.data.data.length - 1].start_date)),
+        day: 1,
+        month: 2,
+        timestamp: 3,
+        year: 2000
+      })
+    } catch (error) {
+      toast.show('No se pudo obtener los dias del periodo.', {
         type: 'error',
         placement: 'top',
         duration: 4000,
@@ -149,11 +175,11 @@ export function PeriodCalendar() {
 
     try {
       const body = {
-        start_date: dates[0],
-        end_date: dates[1]
+        start_date: dates[0].replaceAll('-', '/'),
+        end_date: dates[1].replaceAll('-', '/')
       }
-      console.log(body)
       const res = await api.post('/api/v1/menstrual-calendar', body)
+      console.log(res.data)
 
       toast.show('Periodo menstrual guardado con exito!.', {
         type: 'success',
@@ -198,7 +224,9 @@ export function PeriodCalendar() {
     <View style={styles.container}>
       <Calendar
         style={styles.calendar}
-        onDayPress={changeDay}
+        onDayPress={(date: DayInterface) => {
+          changeDay(date, true)
+        }}
         markedDates={periodDays}
         markingType={'period'}
         theme={themeStyle}
@@ -280,7 +308,7 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   editCalendarBtn: {
-    marginTop: 100,
+    marginTop: 50,
     padding: 15,
     width: '100%',
     backgroundColor: '#B045CB',
