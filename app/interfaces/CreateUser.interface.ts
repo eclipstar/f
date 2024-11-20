@@ -43,6 +43,13 @@ export interface IUpdateUserInfo {
   email?: string
 }
 
+export interface IResetPassword {
+  code: string
+  email: string
+  password?: string
+  password_confirmation?: string
+}
+
 export interface ICreateUserInterests {
   interest_ids: number[]
 }

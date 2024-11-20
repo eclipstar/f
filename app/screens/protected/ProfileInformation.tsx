@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
+import Loader from '../../ui/components/Loader'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { IGetGeneralUser, IUpdateUserInfo } from 'interfaces/CreateUser.interface'
@@ -81,12 +82,7 @@ const ProfileInformation = ({ navigation }: Props) => {
   }, [])
 
   if (loading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size='large' color='#6A1B9A' />
-        <Text style={styles.loadingText}>Cargando...</Text>
-      </View>
-    )
+    return <Loader loading />
   }
 
   return (

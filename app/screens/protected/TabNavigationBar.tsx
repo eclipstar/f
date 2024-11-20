@@ -69,9 +69,9 @@ export function TabNavigationBar() {
     >
       <Tab.Screen name='Videos' component={VideosScreen} />
       <Tab.Screen name='Juegos' component={JuegosScreen} />
-      <Tab.Screen name='Inicio' component={HomeScreen} />
-      <Tab.Screen name='Directorio' options={{ unmountOnBlur: true }} component={DirectoryScreen} />
-      <Tab.Screen name='Perfil' options={{ unmountOnBlur: true }} component={ProfileInformation} />
+      <Tab.Screen name='Inicio' options={{ unmountOnBlur: true }} component={HomeScreen} />
+      <Tab.Screen name='Directorio' component={DirectoryScreen} />
+      <Tab.Screen name='Perfil' component={ProfileInformation} />
     </Tab.Navigator>
   )
 }

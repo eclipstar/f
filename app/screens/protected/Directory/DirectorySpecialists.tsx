@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import Logo from '../../../../logo.svg'
+import Loader from '../../../ui/components/Loader'
 import { ScrollView } from 'react-native-gesture-handler'
 
 import Button from '@ui/components/Button'
@@ -18,15 +19,27 @@ import colors from '@config/theme/colors'
 
 function DirectorySpecialists({ zone }: { zone: Zone }) {
   const [directories, setdirectories] = useState<Directory[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
 
   const getDirectories = async () => {
-    const res = await GetDirectoriesByZone(zone)
-    setdirectories(res.data)
+    try {
+      const res = await GetDirectoriesByZone(zone)
+      setdirectories(res.data)
+    } catch (error) {
+      console.log('🚀 ~ getDirectories ~ error:', error)
+    } finally {
+      setLoading(false)
+    }
+    setLoading(false)
   }
 
   useEffect(() => {
     getDirectories()
   }, [])
+
+  if (loading) {
+    return <Loader loading />
+  }
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.item}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Alert, StyleSheet, Text, View } from 'react-native'
 
 import Logo from '../../logo.svg'
@@ -10,10 +10,11 @@ import { useToast } from 'react-native-toast-notifications'
 
 import LoginForm from '@ui/Forms/LoginForm'
 import Button from '@ui/components/Button'
+import PasswordResetModal from '@ui/components/ForgotPswModal'
 import Title from '@ui/tipografy/Title'
 
 import { storeData } from '@services/AsyncStorage.service'
-import { ForgotPassword } from '@services/auth/ForgotPassowrd.service'
+import { ForgotPassword, ForgotPasswordCode, ForgotPasswordReset } from '@services/auth/ForgotPassowrd.service'
 import { Login } from '@services/auth/loginService'
 
 import colors from '@config/theme/colors'
@@ -29,7 +30,10 @@ interface Props {
 
 function LoginScreen({ navigation }: Props) {
   const toast = useToast()
-  const [email, setemail] = useState('')
+  const [email, setEmail] = useState<string>('')
+  const [codeLocal, setCodeLocal] = useState<string>('')
+  const [isModalVisible, setModalVisible] = useState<boolean>(false)
+
   const handleLoginWithGoogle = () => {
     Alert.alert('Registro con Google', 'Has presionado REGISTRAR CON GOOGLE')
   }
@@ -48,7 +52,7 @@ function LoginScreen({ navigation }: Props) {
       })
       navigation.navigate('Description1')
     } catch (error) {
-      toast.show('Usuario o contrasena incorrectos.', {
+      toast.show('Usuario o contraseña incorrectos.', {
         type: 'error',
         placement: 'top',
         duration: 4000,
@@ -57,28 +61,48 @@ function LoginScreen({ navigation }: Props) {
     }
   }
 
-  const handleResetPassword = async () => {
-    if (!email) {
-      return toast.show('Escriba un correo electronico', {
-        type: 'info',
+  const handleResetPassword = () => {
+    setModalVisible(true)
+  }
+
+  const handleEmailSubmission = async (submittedEmail: string) => {
+    const res = await ForgotPassword(submittedEmail)
+    setEmail(submittedEmail)
+  }
+
+  const handleCodeSubmission = async (code: string) => {
+    try {
+      const res = await ForgotPasswordCode(email, code)
+      setCodeLocal(code)
+    } catch (error: any) {
+      setModalVisible(false)
+      toast.show('Código inválido.', {
+        type: 'danger',
         placement: 'top',
         duration: 4000,
         animationType: 'slide-in'
       })
     }
+  }
 
+  const handlePasswordChange = async (newPassword: string) => {
     try {
-      const res = await ForgotPassword(email)
-
-      toast.show('Envío de correo exitoso', {
+      setModalVisible(false)
+      const newPsw = await ForgotPasswordReset({
+        code: codeLocal,
+        email,
+        password: newPassword,
+        password_confirmation: newPassword
+      })
+      toast.show('Contraseña actualizada exitosamente.', {
         type: 'success',
         placement: 'top',
         duration: 4000,
         animationType: 'slide-in'
       })
     } catch (error) {
-      toast.show('No se pudo enviar el correo', {
-        type: 'error',
+      toast.show('Contraseña no actualizada.', {
+        type: 'danger',
         placement: 'top',
         duration: 4000,
         animationType: 'slide-in'
@@ -87,7 +111,7 @@ function LoginScreen({ navigation }: Props) {
   }
 
   const getEmailForResetPass = (val: string) => {
-    setemail(val)
+    setEmail(val)
   }
 
   return (
@@ -119,6 +143,13 @@ function LoginScreen({ navigation }: Props) {
           </TouchableOpacity>
         </View>
       </View>
+      <PasswordResetModal
+        isVisible={isModalVisible}
+        onClose={() => setModalVisible(false)}
+        onSubmitEmail={handleEmailSubmission}
+        onSubmitCode={handleCodeSubmission}
+        onSubmitNewPassword={handlePasswordChange}
+      />
     </View>
   )
 }

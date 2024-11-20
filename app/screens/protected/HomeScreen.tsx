@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { FlatList, ScrollView, StyleSheet, View } from 'react-native'
 
 import Logo from '../../../logo.svg'
+import Loader from '../../ui/components/Loader'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Emotion } from 'interfaces/Emotion.interface'
 import { HomeImage } from 'interfaces/GetHomeImgs.interface'
@@ -23,6 +24,7 @@ import ModalComponent from './Modal'
 
 export function HomeScreen() {
   const renderItem = (item: HomeImage) => <SliderCard item={item} />
+  const [loading, setLoading] = useState<boolean>(true)
   const [firtSlider, setFirstSlider] = useState<HomeImage[]>([])
   const [imgsHome, setimgsHome] = useState<HomeImage[]>([])
   const [emotions, setEmotions] = useState<Emotion[]>([])
@@ -56,10 +58,16 @@ export function HomeScreen() {
   }
 
   const getHomeImage = async () => {
-    const imgs = await GetImagesHome()
-    const carrousel = await GetCarrouselImages()
-    setimgsHome(imgs.data)
-    setCarrouselImgs(carrousel.data)
+    try {
+      const imgs = await GetImagesHome()
+      const carrousel = await GetCarrouselImages()
+      setimgsHome(imgs.data)
+      setCarrouselImgs(carrousel.data)
+    } catch (error) {
+      console.log('🚀 ~ getHomeImage ~ error:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const buildFirst = async () => {
@@ -102,6 +110,10 @@ export function HomeScreen() {
     checkModalVisibility()
     buildFirst()
   }, [])
+
+  if (loading) {
+    return <Loader loading />
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

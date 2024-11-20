@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, View, TouchableOpacity, StyleSheet, Dimensions, Image, Text, ScrollView } from 'react-native'
+import { Dimensions, Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 interface TipData {
   tip_title: string
@@ -10,28 +10,23 @@ interface ModalProps {
   isVisible: boolean
   onClose: () => void
   emotions: { id: number; emotion: string; icon: any }[]
-  onEmotionSelect: (emotion: string) => Promise<TipData | null> 
+  onEmotionSelect: (emotion: string) => Promise<TipData | null>
 }
 
 const ModalComponent: React.FC<ModalProps> = ({ isVisible, onClose, emotions, onEmotionSelect }) => {
-  const [view, setView] = useState<'emotions' | 'tip'>('emotions') 
-  const [tipData, setTipData] = useState<TipData | null>(null) 
+  const [view, setView] = useState<'emotions' | 'tip'>('emotions')
+  const [tipData, setTipData] = useState<TipData | null>(null)
 
   const handleEmotionSelect = async (emotion: string) => {
-    const tip = await onEmotionSelect(emotion) 
+    const tip = await onEmotionSelect(emotion)
     if (tip) {
-      setTipData(tip) 
-      setView('tip') 
+      setTipData(tip)
+      setView('tip')
     }
   }
 
   return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={isVisible}
-      onRequestClose={onClose}
-    >
+    <Modal animationType='fade' transparent={true} visible={true} onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           {view === 'emotions' && (

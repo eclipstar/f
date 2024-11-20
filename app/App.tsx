@@ -21,6 +21,8 @@ import WelcomeScreen from '@screens/WelcomeScreen'
 import { ProfileScreen } from '@screens/protected/ProfileScreen'
 import { TabNavigationBar } from '@screens/protected/TabNavigationBar'
 
+import Loader from './ui/components/Loader'
+
 const App: React.FC = () => {
   const Stack = createStackNavigator()
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
@@ -35,11 +37,7 @@ const App: React.FC = () => {
   }, [])
 
   if (isAuthenticated === null) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size='large' color='#0000ff' />
-      </View>
-    )
+    return <Loader loading={isAuthenticated === null} />
   }
 
   return (
