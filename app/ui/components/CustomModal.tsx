@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Dimensions, Modal, Pressable, StyleSheet, View } from 'react-native'
 
 import CloseIcon from '../../assets/icons/close.svg'
 import DislikeOutlined from '../../assets/icons/dislikeOutlined.svg'
 import FillHeart from '../../assets/icons/fillHeart.svg'
-import FilledDislike from '../../assets/icons/filledDislike.svg'
-import LikeFilled from '../../assets/icons/likeFilled.svg'
 import LikeOutlined from '../../assets/icons/likeOutlined.svg'
-import OutlineHeart from '../../assets/icons/outlineHeart.svg'
 
 interface Props {
   visible: boolean

@@ -1,6 +1,7 @@
 import api from '../config/axiosConfig'
 import { IGetEmotion } from 'interfaces/Emotion.interface'
-import emojiMap from '../utils/emojis/emojiMap' 
+
+import { emojiMap } from '@utils/emojis/emojiMap'
 
 export const GetEmotions = async (): Promise<IGetEmotion> => {
   try {
@@ -8,7 +9,7 @@ export const GetEmotions = async (): Promise<IGetEmotion> => {
 
     const updatedData = response.data.data.map(emotion => ({
       ...emotion,
-      icon: emojiMap[emotion.id],
+      icon: emojiMap[emotion.id]
     }))
 
     return { ...response.data, data: updatedData }
