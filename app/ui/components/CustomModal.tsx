@@ -27,11 +27,11 @@ function CustomModal({ visible, children, onClose }: Props) {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             {children}
-            <View style={styles.container}>
+            {/* <View style={styles.container}>
               <LikeOutlined width={40} height={40} />
               <DislikeOutlined width={40} height={40} />
               <FillHeart width={40} height={40} />
-            </View>
+            </View> */}
             <Pressable style={[styles.button, styles.buttonClose]} onPress={() => onClose()}>
               <CloseIcon width={20} height={20} />
             </Pressable>

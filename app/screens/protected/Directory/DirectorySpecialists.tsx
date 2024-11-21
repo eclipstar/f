@@ -50,7 +50,7 @@ function DirectorySpecialists({ zone }: { zone: Zone }) {
           {zone.zone_name}
         </Button>
       </View>
-      <DataFilterActions />
+      {/* <DataFilterActions /> */}
       <SpecialistList data={directories} />
     </ScrollView>
   )

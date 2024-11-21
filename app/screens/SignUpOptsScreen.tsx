@@ -33,7 +33,7 @@ function SignUpOptsScreen({ navigation }: Props) {
   }
 
   const handleRegisterWithGoogle = () => {
-    Alert.alert('Registro con Google', 'Has presionado REcGISTRAR CON GOOGLE')
+    // Alert.alert('Registro con Google', 'Has presionado REcGISTRAR CON GOOGLE')
   }
 
   const handleLogin = () => {

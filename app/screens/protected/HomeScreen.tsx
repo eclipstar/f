@@ -9,13 +9,16 @@ import { Emotion } from 'interfaces/Emotion.interface'
 import { HomeImage } from 'interfaces/GetHomeImgs.interface'
 
 import Carousel from '@ui/components/Carousel'
-import { SliderCard } from '@ui/components/SliderCard'
+import { SliderCard, SliderVideoCard } from '@ui/components/SliderCard'
 
 import { storeData } from '@services/AsyncStorage.service'
 import { GetEmotions } from '@services/GetEmotions.service'
+import { IGetVideos, Video } from '@services/Videos.service'
 import { CarrouselImg, GetCarrouselImages } from '@services/home/GetCrrouselmages.service'
 import { GetImagesHome } from '@services/home/GetHomeImages.service'
 import { createDailyEmotion } from '@services/setDailyEmotion'
+
+import api from '@config/axiosConfig'
 
 import img1 from '@assets/images/1.png'
 import img2 from '@assets/images/2.png'
@@ -24,13 +27,14 @@ import ModalComponent from './Modal'
 
 export function HomeScreen() {
   const renderItem = (item: HomeImage) => <SliderCard item={item} />
+  const renderVideoItem = (item: Video) => <SliderVideoCard item={item} />
   const [loading, setLoading] = useState<boolean>(true)
   const [firtSlider, setFirstSlider] = useState<HomeImage[]>([])
   const [imgsHome, setimgsHome] = useState<HomeImage[]>([])
   const [emotions, setEmotions] = useState<Emotion[]>([])
   const [carrouselImgs, setCarrouselImgs] = useState<CarrouselImg[]>([])
   const [isModalVisible, setIsModalVisible] = useState(false)
-
+  const [videos, setvideos] = useState<Video[]>([])
   const handleEmotionSelect = async (emotion: string) => {
     try {
       const response = await createDailyEmotion({ emotion })
@@ -55,6 +59,11 @@ export function HomeScreen() {
     } catch (error) {
       console.error('Error checking modal visibility:', error)
     }
+  }
+
+  const getVideos = async () => {
+    const res = await api.get<IGetVideos>('/api/v1/videos/home-videos')
+    setvideos([...res.data.data])
   }
 
   const getHomeImage = async () => {
@@ -107,6 +116,7 @@ export function HomeScreen() {
   useEffect(() => {
     getHomeImage()
     fetchEmotions()
+    getVideos()
     checkModalVisibility()
     buildFirst()
   }, [])
@@ -141,8 +151,8 @@ export function HomeScreen() {
         <Carousel data={carrouselImgs} />
         <FlatList
           style={{ marginTop: 30, marginBottom: 150 }}
-          data={imgsHome}
-          renderItem={({ item }) => renderItem(item)}
+          data={videos}
+          renderItem={({ item }) => renderVideoItem(item)}
           keyExtractor={item => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}

@@ -14,7 +14,7 @@ function VideosScreen() {
         <View style={styles.item}>
           <Logo width={125} height={125} />
         </View>
-        <DataFilterActions />
+        {/* <DataFilterActions /> */}
         <View style={styles.capsulasEducativasContainer}>
           <Text style={styles.capsulasText}>CAPSULAS </Text>
           <Text style={styles.educativasText}>EDUCATIVAS</Text>
