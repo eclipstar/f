@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     position: 'relative',
-    height: dimensions.height * 0.39,
+    height: dimensions.height * 0.29,
     width: dimensions.width * 0.95,
     margin: 20,
     backgroundColor: '#dcd8eb',
