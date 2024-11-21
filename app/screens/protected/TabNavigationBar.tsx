@@ -9,15 +9,34 @@ import Perfil from '../../assets/icons/perfil.svg'
 import Videos from '../../assets/icons/videos.svg'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createStackNavigator } from '@react-navigation/stack'
 
 import DirectoryScreen from './Directory/DirectoryScreen'
+import Trivia from './Game/Trivia'
 import { HomeScreen } from './HomeScreen'
 import JuegosScreen from './JuegosScreen'
 import ProfileInformation from './ProfileInformation'
 import VideosScreen from './VideosScreen'
 
+// Importamos el componente Trivia
+
 export function TabNavigationBar() {
   const Tab = createBottomTabNavigator()
+  const JuegosStack = createStackNavigator()
+
+  const JuegosStackScreen = () => (
+    <JuegosStack.Navigator>
+      <JuegosStack.Screen
+        name='Trivia'
+        component={Trivia}
+        options={{
+          headerShown: false,
+          title: 'Trivia'
+        }}
+      />
+    </JuegosStack.Navigator>
+  )
+
   useEffect(() => {
     const logAllStorageItems = async () => {
       try {
@@ -68,7 +87,7 @@ export function TabNavigationBar() {
       })}
     >
       <Tab.Screen name='Videos' component={VideosScreen} />
-      <Tab.Screen name='Juegos' component={JuegosScreen} />
+      <Tab.Screen name='Juegos' component={Trivia} />
       <Tab.Screen name='Inicio' options={{ unmountOnBlur: true }} component={HomeScreen} />
       <Tab.Screen name='Directorio' component={DirectoryScreen} />
       <Tab.Screen name='Perfil' options={{ unmountOnBlur: true }} component={ProfileInformation} />

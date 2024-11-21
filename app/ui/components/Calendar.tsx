@@ -20,6 +20,7 @@ import { sintomsEmojisMap } from '@utils/emojis/emojiMap'
 import { LayoutUtils } from '@utils/layout'
 
 import GenericModalComponent from './GenericModal'
+import Loader from './Loader'
 
 interface DayInterface {
   dateString: string
@@ -41,6 +42,7 @@ export function PeriodCalendar() {
   const [selectedSintom, setselectedSintom] = useState<Sintom>()
   const [tip, settip] = useState<Tip>()
   const [isEditCalendar, setisEditCalendar] = useState(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const [periodDaysResponse, setperiodDaysResponse] = useState<Period[]>([])
 
   const themeStyle = {
@@ -62,7 +64,7 @@ export function PeriodCalendar() {
 
   const changeDay = (day: DayInterface, userClick: boolean = false) => {
     console.log('==============================', day)
-    if (!isEditCalendar && userClick) return Alert.alert('Alerta', 'Cambiar a modo edicion.')
+    if (!isEditCalendar && userClick) return //Alert.alert('Alerta', 'Cambiar a modo edicion.')
     setSelected(day.dateString)
     let days = calculatePeriodDays(day.dateString)
     setPeriodDays(
@@ -81,6 +83,7 @@ export function PeriodCalendar() {
 
   const getSintoms = async () => {
     try {
+      setLoading(true)
       const res = await api.get<IGetSintoms>('/api/v1/symptoms')
       const updatedData = res.data.data.map(emotion => ({
         ...emotion,
@@ -94,6 +97,8 @@ export function PeriodCalendar() {
         duration: 4000,
         animationType: 'slide-in'
       })
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -187,6 +192,7 @@ export function PeriodCalendar() {
         duration: 4000,
         animationType: 'slide-in'
       })
+      setisEditCalendar(false)
     } catch (error) {
       console.log(error)
 
@@ -199,6 +205,9 @@ export function PeriodCalendar() {
     }
   }
 
+  if (loading) {
+    return <Loader loading />
+  }
   const renderItem = ({ item }: { item: Sintom }) => (
     <TouchableOpacity onPress={() => pressSintom(item)} style={styles.itemContainer}>
       {item.id > 1 ? (
@@ -269,7 +278,7 @@ export function PeriodCalendar() {
           <View style={{ width: '100%', alignItems: 'center', padding: 20 }}>
             <Image style={{ width: 40, height: 40 }} source={require('../../assets/icons/lightbulb.png')}></Image>
             <Text style={{ color: '#9D47B2', fontWeight: '700', fontSize: 20 }}>¡Consejo del dia!</Text>
-            <Text style={{ margin: 20 }}>{tip.tip_description}</Text>
+            <Text style={{ margin: 20, color: '#533A8E' }}>{tip.tip_description}</Text>
             <TouchableOpacity onPress={() => setshowModal(false)} style={styles.gotoCalendar}>
               <Text style={{ fontWeight: '600', color: 'white', textAlign: 'center' }}>¡Ir a calendario!</Text>
             </TouchableOpacity>

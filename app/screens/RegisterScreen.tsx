@@ -21,10 +21,12 @@ export type RootStackParamList = {
   Login: undefined
   SignUpOpts: undefined
   Welcome: undefined
+  MainGame: undefined
   Main: undefined
   Description1: undefined
   Description2: undefined
   Calendar: undefined
+  Juegos: { idTrivia: number } // Nueva ruta con parámetros
 }
 
 type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>
