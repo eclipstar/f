@@ -9,6 +9,9 @@ import { GetVideos, Video } from '@services/Videos.service'
 import CustomModal from './CustomModal'
 import VideoPlayer from './VideoPlayer'
 
+interface VideoListProps {
+  videos: Video[] // Define los videos como prop
+}
 const data = [
   {
     id: '1',
@@ -71,18 +74,7 @@ function ListItem({ item, index }: { item: Video; index: number }) {
   )
 }
 
-function VideoList() {
-  const [videos, setvideos] = useState<Video[]>([])
-
-  const getVideos = async () => {
-    const res = await GetVideos()
-    setvideos(res.data)
-  }
-
-  useEffect(() => {
-    getVideos()
-  }, [])
-
+function VideoList({ videos }: VideoListProps) {
   return (
     <View style={styles.container}>
       {videos.map((video, i) => (

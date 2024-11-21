@@ -24,9 +24,9 @@ const SignupSchema = Yup.object().shape({
   day: Yup.number().max(31, 'Solo dias calendario validos').required('El dia es requerido'),
   month: Yup.number().min(1).max(12).required('El mes es requerido'),
   year: Yup.number()
-    .min(1950, 'Anio no puede ser menor 1950')
-    .max(new Date().getFullYear(), `El anio no debe ser mayor a ${new Date().getFullYear()}`)
-    .required('El anio es requerido'),
+    .min(1950, 'Año no puede ser menor 1950')
+    .max(new Date().getFullYear(), `El año no debe ser mayor a ${new Date().getFullYear()}`)
+    .required('El año es requerido'),
   gender_id: Yup.string().required('Genero es requerido'),
   department_id: Yup.string().required('El departamento es requerido')
 })
@@ -139,7 +139,7 @@ export function SecondStepForm({ onSubmit }: Props) {
                       onChangeText={handleChange('year')}
                       onBlur={handleBlur('year')}
                       value={values.year}
-                      placeholder='Anio'
+                      placeholder='Año'
                     />
                   </View>
                 </View>

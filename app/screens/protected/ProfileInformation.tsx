@@ -36,6 +36,7 @@ const ProfileInformation = ({ navigation }: Props) => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('jwt')
+      await AsyncStorage.clear()
       navigation.navigate('SignUpOpts')
     } catch (error) {
       Alert.alert('Error', 'Hubo un problema al cerrar sesión. Intenta de nuevo.')
@@ -72,8 +73,6 @@ const ProfileInformation = ({ navigation }: Props) => {
       name: file.fileName
     })
 
-    console.log('++++++++++++++++++++++++++++++++++++++', JSON.stringify(formData))
-
     try {
       const token = await AsyncStorage.getItem('jwt')
 
@@ -85,7 +84,6 @@ const ProfileInformation = ({ navigation }: Props) => {
           Authorization: `Bearer ${token}`
         }
       })
-      console.log('Imagen subida:', response)
       toast.show('Avatar actualizado exitosamente.', {
         type: 'success',
         placement: 'top',

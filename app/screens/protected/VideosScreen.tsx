@@ -1,13 +1,38 @@
 /* eslint-disable react-native/no-inline-styles */
+import { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 import Logo from '../../../logo.svg'
+import Loader from '../../ui/components/Loader'
 import { ScrollView } from 'react-native-gesture-handler'
 
 import DataFilterActions from '@ui/components/DataFilterActions'
 import VideoList from '@ui/components/VideoList'
 
+import { GetVideos, Video } from '@services/Videos.service'
+
 function VideosScreen() {
+  const [loading, setLoading] = useState<boolean>(true)
+  const [videos, setVideos] = useState<Video[]>([])
+
+  const fetchVideos = async () => {
+    try {
+      const res = await GetVideos()
+      setVideos(res.data)
+    } catch (error) {
+      console.error('Error fetching videos:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchVideos()
+  }, [])
+
+  if (loading) {
+    return <Loader loading />
+  }
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.titleContainer}>
@@ -23,7 +48,7 @@ function VideosScreen() {
       </View>
       {/* LISTA */}
 
-      <VideoList />
+      <VideoList videos={videos} />
     </ScrollView>
   )
 }
@@ -52,7 +77,7 @@ const styles = StyleSheet.create({
   capsulasDescription: {
     textAlign: 'center',
     color: '#FF6F15',
-    width: '60%'
+    width: '80%'
   },
   educativasText: {
     textAlign: 'center',

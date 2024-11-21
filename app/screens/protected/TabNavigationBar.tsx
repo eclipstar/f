@@ -66,6 +66,8 @@ export function TabNavigationBar() {
         tabBarInactiveTintColor: '#9D47B2',
         tabBarIconStyle: { marginTop: 16 },
         tabBarLabelStyle: { fontWeight: 700, paddingBottom: 13 },
+        tabBarShowLabel: false, // Oculta los labels
+
         tabBarIcon() {
           switch (route.name) {
             case 'Home':

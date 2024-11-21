@@ -73,7 +73,6 @@ export function HomeScreen() {
       setimgsHome(imgs.data)
       setCarrouselImgs(carrousel.data)
     } catch (error) {
-      console.log('🚀 ~ getHomeImage ~ error:', error)
     } finally {
       setLoading(false)
     }
@@ -140,7 +139,7 @@ export function HomeScreen() {
         <Logo width={125} height={125} />
         <FlatList
           style={{ marginBottom: 30 }}
-          data={firtSlider}
+          data={imgsHome}
           renderItem={({ item }) => renderItem(item)}
           keyExtractor={item => item.id.toString()}
           horizontal

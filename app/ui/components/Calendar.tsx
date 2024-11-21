@@ -63,7 +63,6 @@ export function PeriodCalendar() {
   }, [])
 
   const changeDay = (day: DayInterface, userClick: boolean = false) => {
-    console.log('==============================', day)
     if (!isEditCalendar && userClick) return //Alert.alert('Alerta', 'Cambiar a modo edicion.')
     setSelected(day.dateString)
     let days = calculatePeriodDays(day.dateString)
