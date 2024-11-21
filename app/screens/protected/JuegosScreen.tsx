@@ -1,5 +1,7 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Module, StyleSheet, Text, View } from 'react-native'
+
+import { GetModules } from '@services/Modules/GetModules.service'
 
 interface CardProps {
   title?: string
@@ -7,15 +9,22 @@ interface CardProps {
   style?: object
 }
 
-const Card: React.FC<CardProps> = ({ title, backgroundColor = '#F8F7FF', style }) => {
-  return (
-    <View style={[styles.card, { backgroundColor }, style]}>
-      {title && <Text style={styles.cardText}>{title}</Text>}
-    </View>
-  )
-}
+const Card: React.FC<CardProps> = ({ title, backgroundColor = '#F8F7FF', style }) => (
+  <View style={[styles.card, { backgroundColor }, style]}>{title && <Text style={styles.cardText}>{title}</Text>}</View>
+)
 
 const ModuleCards: React.FC = () => {
+  const [modulos, setmodulos] = useState<Module[]>([])
+
+  const getModules = async () => {
+    const res = await GetModules()
+    setmodulos(res.data)
+  }
+
+  useEffect(() => {
+    // getModules()
+  }, [])
+
   return (
     <View style={styles.container}>
       {/* Main module card */}

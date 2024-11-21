@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import Loader from '../../ui/components/Loader'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { IGetGeneralUser, IUpdateUserInfo } from 'interfaces/CreateUser.interface'
+import { Asset, ImageLibraryOptions, launchCamera, launchImageLibrary } from 'react-native-image-picker'
 import { useToast } from 'react-native-toast-notifications'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import { getUserInfo } from '@services/GetUserInfo.service'
 import { updateUserInformation } from '@services/setUserUpdate'
+
+import api from '@config/axiosConfig'
 
 import { isNotEmptyObject } from '@utils/helpers'
 
@@ -28,15 +31,14 @@ const ProfileInformation = ({ navigation }: Props) => {
   const [userInformation, setUserInformation] = useState<IGetGeneralUser | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [showUserForm, setShowUserForm] = useState<boolean>(false)
+  const [selectedAvatar, setselectedAvatar] = useState<string | undefined>()
 
-  const handleEdit = () => console.log('Edit Profile')
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('jwt')
       navigation.navigate('SignUpOpts')
     } catch (error) {
       Alert.alert('Error', 'Hubo un problema al cerrar sesión. Intenta de nuevo.')
-      console.error('Logout error:', error)
     }
   }
 
@@ -56,10 +58,63 @@ const ProfileInformation = ({ navigation }: Props) => {
       const userData = await getUserInfo()
       setUserInformation(userData)
     } catch (error) {
-      console.error('Error fetching user info:', error)
       Alert.alert('Error', 'No se pudieron cargar los datos del usuario.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const uploadImageBlob = async (file: Asset) => {
+    const formData = new FormData()
+    formData.append('image', {
+      uri: file.uri,
+      type: file.type,
+      name: file.fileName
+    })
+
+    console.log('++++++++++++++++++++++++++++++++++++++', JSON.stringify(formData))
+
+    try {
+      const token = await AsyncStorage.getItem('jwt')
+
+      const response = await fetch('http://159.223.132.11/api/auth/profile/avatar', {
+        body: formData,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        }
+      })
+      console.log('Imagen subida:', response)
+      toast.show('Avatar actualizado exitosamente.', {
+        type: 'success',
+        placement: 'top',
+        duration: 4000,
+        animationType: 'slide-in'
+      })
+    } catch (error: any) {
+      console.log(error)
+      console.log('🚀 ~ updateUserInformation ~ Error Message:', error.message) // Mensaje de error principal
+      if (error.response) {
+        // Si el error proviene de la respuesta del servidor
+        console.log('🚀 ~ updateUserInformation ~ Response Status:', error.response.status)
+        console.log('🚀 ~ updateUserInformation ~ Response Data:', error.response.data)
+        console.log('🚀 ~ updateUserInformation ~ Response Headers:', error.response.headers)
+      } else if (error.request) {
+        // Si no se recibió respuesta del servidor
+        console.log('🚀 ~ updateUserInformation ~ Request Error:', error.request)
+      } else {
+        // Si ocurrió otro tipo de error
+        console.log('🚀 ~ updateUserInformation ~ General Error:', error.message)
+      }
+
+      toast.show('Error al subir la imagen.', {
+        type: 'error',
+        placement: 'top',
+        duration: 4000,
+        animationType: 'slide-in'
+      })
+      throw error
     }
   }
 
@@ -75,6 +130,55 @@ const ProfileInformation = ({ navigation }: Props) => {
       setUserInformation({ data: { ...reponse.user } })
     }
     setShowUserForm(false)
+  }
+
+  const selectImage = async () => {
+    const options: ImageLibraryOptions = {
+      mediaType: 'photo',
+      quality: 1
+    }
+
+    const result = await launchImageLibrary(options)
+
+    if (result.didCancel) {
+    } else if (result.assets) {
+      const selectedImage = result.assets[0]
+      uploadImageBlob(selectedImage)
+      setselectedAvatar(selectedImage.uri)
+      return selectedImage
+    }
+  }
+
+  const openCamera = async () => {
+    const options: ImageLibraryOptions = {
+      mediaType: 'photo',
+      quality: 1
+    }
+
+    const result = await launchCamera(options)
+
+    if (!result.didCancel && result.assets) {
+      const selectedImage = result.assets[0]
+      uploadImageBlob(selectedImage)
+      setselectedAvatar(selectedImage.uri) // Guardar la URI de la imagen tomada
+    }
+  }
+
+  const handleImageSelection = () => {
+    Alert.alert('Seleccionar Imagen', '¿Deseas usar la Cámara o la Galería?', [
+      {
+        text: 'Cámara',
+        onPress: () => openCamera() // Abre la cámara
+      },
+      {
+        text: 'Galería',
+        onPress: () => selectImage() // Abre la galería
+      },
+      {
+        text: 'Cancelar',
+        style: 'cancel'
+      }
+    ])
   }
 
   useEffect(() => {
@@ -95,11 +199,11 @@ const ProfileInformation = ({ navigation }: Props) => {
         <View style={styles.imageContainer}>
           <Image
             source={{
-              uri: userInformation?.data?.avatar ?? 'https://via.placeholder.com/100'
+              uri: selectedAvatar || userInformation?.data?.avatar || 'https://via.placeholder.com/100'
             }}
             style={styles.profileImage}
           />
-          <TouchableOpacity style={styles.editIcon} onPress={handleEdit}>
+          <TouchableOpacity style={styles.editIcon} onPress={handleImageSelection}>
             <Icon name='camera-alt' size={18} color='white' />
           </TouchableOpacity>
         </View>

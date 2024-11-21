@@ -1,8 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import PlayImg from '../../assets/icons/play.svg'
+
+import { GetVideos, Video } from '@services/Videos.service'
 
 import CustomModal from './CustomModal'
 import VideoPlayer from './VideoPlayer'
@@ -35,7 +37,7 @@ const data = [
   }
 ]
 
-function ListItem({ item, index }: { item: any; index: number }) {
+function ListItem({ item, index }: { item: Video; index: number }) {
   const [showVideo, setshowVideo] = useState(false)
 
   return (
@@ -50,29 +52,40 @@ function ListItem({ item, index }: { item: any; index: number }) {
             <View style={{ position: 'relative' }}>
               <ImageBackground
                 style={index % 2 === 0 ? styles.imageContainer : styles.imageContainerEven}
-                source={{ uri: item.image }}
+                source={{
+                  uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5G0GEO6mDxg8Vk3Eg-izH67_GVj1oFMKjtA&s'
+                }}
                 resizeMode='cover'
               />
               <PlayImg style={index % 2 === 0 ? styles.imagePlay : styles.imagePlayEven} />
             </View>
           </Pressable>
         </View>
-        <Text style={styles.videoDescription}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate magnam quia, corrupti incidunt molestias
-          et amet eveniet nisi quam maiores quidem blanditiis facere harum hnem .
-        </Text>
+        <Text style={{ fontWeight: '700' }}>{item.video_title}: </Text>
+        <Text style={styles.videoDescription}>{item.video_description}</Text>
       </View>
       <CustomModal onClose={() => setshowVideo(false)} visible={showVideo}>
-        <VideoPlayer />
+        <VideoPlayer video={item} />
       </CustomModal>
     </>
   )
 }
 
 function VideoList() {
+  const [videos, setvideos] = useState<Video[]>([])
+
+  const getVideos = async () => {
+    const res = await GetVideos()
+    setvideos(res.data)
+  }
+
+  useEffect(() => {
+    getVideos()
+  }, [])
+
   return (
     <View style={styles.container}>
-      {data.map((video, i) => (
+      {videos.map((video, i) => (
         <ListItem key={video.id} index={i} item={video} />
       ))}
     </View>
